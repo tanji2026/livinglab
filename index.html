@@ -475,15 +475,15 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- 標章申請卡片 -->
-                <div class="bg-amber-50/50 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-amber-200 group relative overflow-hidden">
+                <div class="flex flex-col h-full justify-between bg-amber-50/50 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-amber-200 group relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-2 h-full bg-amber-600"></div>
-                    <div>
+                    <div class="flex-grow">
                         <div class="flex justify-between items-start mb-6">
                             <div class="bg-amber-100 p-3 rounded-xl text-amber-700 group-hover:scale-110 transition-transform">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">低碳標章認證申請書</h3>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">低碳社區標章認證申請表</h3>
                         <p class="text-slate-500 text-sm mb-6 h-10">適用於申請銀鵝、金熊、白金級標章。</p>
                         <div class="space-y-4 mb-8">
                             <div>
@@ -500,31 +500,39 @@
                             </div>
                         </div>
                     </div>
-                    <button onclick="generateCertDoc()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5">
+                    <button onclick="generateCertDoc()" class="w-full mt-auto bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         生成申請書
                     </button>
                 </div>
 
                 <!-- 改造補助卡片 (藍色風格) -->
-                <div class="bg-sky-50/50 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-sky-200 group relative overflow-hidden">
+                <div class="flex flex-col h-full justify-between bg-sky-50/50 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-sky-200 group relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-2 h-full bg-sky-600"></div>
-                    <div>
+                    <div class="flex-grow">
                         <div class="flex justify-between items-start mb-6">
                             <div class="bg-sky-100 p-3 rounded-xl text-sky-700 group-hover:scale-110 transition-transform">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                             </div>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">改造補助計畫書</h3>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">低碳社區改造補助計畫申請表</h3>
                         <p class="text-slate-500 text-sm mb-6 h-10">申請硬體改造經費。自動計算補助與自籌金額。</p>
                         
                         <div class="space-y-2 mb-4">
-                            <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">主要改造項目</label>
+                            <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">主要改造項目 (114年補助比例)</label>
                             <select id="plan_type" class="w-full border-2 border-sky-200 rounded-2xl px-6 py-4 text-base focus:ring-4 focus:ring-sky-50 focus:border-sky-500 mb-6 font-bold outline-none bg-white transition cursor-pointer text-slate-700">
-                                <option value="照明系統節能">照明系統 (補助30%)</option>
-                                <option value="綠化植栽">綠化植栽 (補助50%)</option>
-                                <option value="雨水回收">雨水回收 (補助50%)</option>
-                                <option value="再生能源">再生能源 (補助40%)</option>
+                                <option value="50">生物多樣性與綠化 (補助50%)</option>
+                                <option value="40">建築外殼-隔熱漆/磚 (補助40%)</option>
+                                <option value="50">建築外殼-隔熱膜/遮陽 (補助50%)</option>
+                                <option value="15">一般照明改善 (補助15%)</option>
+                                <option value="30">老舊照明汰換(10年以上) (補助30%)</option>
+                                <option value="30">動力設備節能(電梯/風機) (補助30%)</option>
+                                <option value="40">用水管理(省水器材) (補助40%)</option>
+                                <option value="50">雨水/中水回收系統 (補助50%)</option>
+                                <option value="50">智慧節能管理系統 (補助50%)</option>
+                                <option value="40">再生能源(太陽能/風力) (補助40%)</option>
+                                <option value="40">資源回收/循環設施 (補助40%)</option>
+                                <option value="50">電動運具設施 (補助50%)</option>
                             </select>
                             
                             <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">預計總經費 (元)</label>
@@ -532,7 +540,7 @@
                         </div>
                     </div>
 
-                    <button onclick="generatePlanDoc()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5 mt-2">
+                    <button onclick="generatePlanDoc()" class="w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5 mt-2">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         生成計畫書
                     </button>
@@ -743,15 +751,14 @@
             const name = document.getElementById('cert_name').value || "未命名社區"; 
             const typeSelect = document.getElementById('plan_type');
             const typeText = typeSelect.options[typeSelect.selectedIndex].text;
+            const percentage = parseInt(typeSelect.value) / 100;
             const total = parseInt(document.getElementById('plan_budget').value) || 0;
-            let ratio = 0.3;
-            if(typeText.includes('50%')) ratio = 0.5;
-            if(typeText.includes('40%')) ratio = 0.4;
-            const subsidy = Math.floor(total * ratio);
+            
+            const subsidy = Math.floor(total * percentage);
             const self = total - subsidy;
             const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType } = docx;
             const doc = new Document({ sections: [{ children: [
-                new Paragraph({ text: "新北市低碳社區改造補助計畫書", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
+                new Paragraph({ text: "新北市低碳社區改造補助計畫申請表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
                 new Paragraph({ text: `1. 申請單位：${name}` }), 
                 new Paragraph({ text: `2. 改造項目：${typeText}\n` }),
                 new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: [
