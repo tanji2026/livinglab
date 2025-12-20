@@ -703,6 +703,19 @@
                                     <option value="energy">再生能源 (太陽能/風力) - 補助40%</option>
                                 </select>
                             </div>
+                            
+                            <!-- 新增：現況描述 -->
+                            <div>
+                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">現況說明 (簡述問題)</label>
+                                <input type="text" id="plan_current_status" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-sky-500 focus:border-sky-500 text-slate-700" placeholder="例：頂樓水泥鋪面老化，夏季室內高溫">
+                            </div>
+
+                            <!-- 新增：改善方式細節 -->
+                            <div>
+                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">改善方式補充 (選填)</label>
+                                <input type="text" id="plan_improvement_detail" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-sky-500 focus:border-sky-500 text-slate-700" placeholder="例：預計鋪設 30 坪薄層綠化，種植多肉植物">
+                            </div>
+
                             <div>
                                 <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">預計總經費 (元)</label>
                                 <input type="number" id="plan_budget" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-sky-500 focus:border-sky-500 text-slate-700" placeholder="請輸入含稅總額">
@@ -969,12 +982,17 @@
         function generatePlanDoc() {
             const name = document.getElementById('cert_name').value || "未命名社區";
             const typeKey = document.getElementById('plan_type_select').value;
+            const currentStatus = document.getElementById('plan_current_status').value || "未填寫";
+            const improvementDetail = document.getElementById('plan_improvement_detail').value || "";
             const totalBudget = parseInt(document.getElementById('plan_budget').value) || 0;
             
             // 讀取 Knowledge Base
             const planInfo = PLAN_CONFIG[typeKey];
             const subsidyAmt = Math.floor(totalBudget * planInfo.ratio);
             const selfAmt = totalBudget - subsidyAmt;
+            
+            // 組合完整的說明文字
+            const finalDesc = improvementDetail ? `${planInfo.desc} (${improvementDetail})` : planInfo.desc;
 
             const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType, BorderStyle } = docx;
             
@@ -1019,8 +1037,12 @@
                                     new TableCell({ children: [new Paragraph(planInfo.title)], ...cellStyle })
                                 ]}),
                                 new TableRow({ children: [
-                                    new TableCell({ children: [new Paragraph({text: "現況說明與改善方式", bold: true})], ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(planInfo.desc)], ...cellStyle })
+                                    new TableCell({ children: [new Paragraph({text: "現況說明", bold: true})], ...cellStyle }),
+                                    new TableCell({ children: [new Paragraph(currentStatus)], ...cellStyle })
+                                ]}),
+                                new TableRow({ children: [
+                                    new TableCell({ children: [new Paragraph({text: "改善方式", bold: true})], ...cellStyle }),
+                                    new TableCell({ children: [new Paragraph(finalDesc)], ...cellStyle })
                                 ]}),
                                 new TableRow({ children: [
                                     new TableCell({ children: [new Paragraph({text: "預估總經費", bold: true})], ...cellStyle }),
