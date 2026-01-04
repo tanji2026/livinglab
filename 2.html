@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
     <title>碳吉 | 2026 第六屆永續生活實驗室獎參賽作品</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
@@ -82,7 +83,7 @@
         }
         input[type="radio"]:checked + .card-content .radio-dot { 
             display: block !important; 
-            background-color: currentColor;
+            background-color: currentColor; 
         }
 
         .group-emerald { color: #10b981; } 
@@ -657,7 +658,7 @@
                             </div>
                         </div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">低碳社區標章認證申請表</h3>
-                        <p class="text-slate-500 text-sm mb-6 h-10">依據 Step 1 自評結果，自動填寫申請等級與現況勾選。</p>
+                        <p class="text-slate-500 text-sm mb-6 h-10">適用於申請銀鵝、金熊、白金級標章。</p>
                         <div class="space-y-4 mb-8">
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">申請單位 (社區全銜)</label>
@@ -679,7 +680,7 @@
                     </button>
                 </div>
 
-                <!-- 改造補助卡片 (藍色風格) - 全新設計的互動區 -->
+                <!-- 改造補助卡片 (藍色風格) -->
                 <div class="flex flex-col h-full justify-between bg-sky-50/50 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-sky-200 group relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-2 h-full bg-sky-600"></div>
                     <div class="flex-grow">
@@ -689,41 +690,31 @@
                             </div>
                         </div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">低碳社區改造補助計畫申請表</h3>
-                        <p class="text-slate-500 text-sm mb-6">針對想改造的項目（如綠屋頂、LED照明），自動計算經費與補助上限。</p>
+                        <p class="text-slate-500 text-sm mb-6 h-10">申請硬體改造經費。自動計算補助與自籌金額。</p>
                         
-                        <!-- 改造計畫互動區 -->
-                        <div class="space-y-4 mb-4 bg-white p-4 rounded-xl border border-sky-100">
-                            <div>
-                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">選擇欲改造項目 (自動帶入補助比例)</label>
-                                <select id="plan_type_select" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-sky-500 focus:border-sky-500 text-slate-700 font-medium">
-                                    <option value="green_roof">生物多樣性與綠化 (綠屋頂/牆) - 補助50%</option>
-                                    <option value="insulation">建築外殼節能 (隔熱磚/漆) - 補助40%</option>
-                                    <option value="lighting">公共照明改善 (LED燈具) - 補助30%</option>
-                                    <option value="water">水資源再利用 (雨水回收) - 補助50%</option>
-                                    <option value="energy">再生能源 (太陽能/風力) - 補助40%</option>
-                                </select>
-                            </div>
+                        <div class="space-y-2 mb-4">
+                            <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">主要改造項目 (114年補助比例)</label>
+                            <select id="plan_type" class="w-full border-2 border-sky-200 rounded-2xl px-6 py-4 text-base focus:ring-4 focus:ring-sky-50 focus:border-sky-500 mb-6 font-bold outline-none bg-white transition cursor-pointer text-slate-700">
+                                <option value="50">生物多樣性與綠化 (補助50%)</option>
+                                <option value="40">建築外殼-隔熱漆/磚 (補助40%)</option>
+                                <option value="50">建築外殼-隔熱膜/遮陽 (補助50%)</option>
+                                <option value="15">一般照明改善 (補助15%)</option>
+                                <option value="30">老舊照明汰換(10年以上) (補助30%)</option>
+                                <option value="30">動力設備節能(電梯/風機) (補助30%)</option>
+                                <option value="40">用水管理(省水器材) (補助40%)</option>
+                                <option value="50">雨水/中水回收系統 (補助50%)</option>
+                                <option value="50">智慧節能管理系統 (補助50%)</option>
+                                <option value="40">再生能源(太陽能/風力) (補助40%)</option>
+                                <option value="40">資源回收/循環設施 (補助40%)</option>
+                                <option value="50">電動運具設施 (補助50%)</option>
+                            </select>
                             
-                            <!-- 新增：現況描述 -->
-                            <div>
-                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">現況說明 (簡述問題)</label>
-                                <input type="text" id="plan_current_status" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-sky-500 focus:border-sky-500 text-slate-700" placeholder="例：頂樓水泥鋪面老化，夏季室內高溫">
-                            </div>
-
-                            <!-- 新增：改善方式細節 -->
-                            <div>
-                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">改善方式補充 (選填)</label>
-                                <input type="text" id="plan_improvement_detail" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-sky-500 focus:border-sky-500 text-slate-700" placeholder="例：預計鋪設 30 坪薄層綠化，種植多肉植物">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">預計總經費 (元)</label>
-                                <input type="number" id="plan_budget" class="w-full border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-sky-500 focus:border-sky-500 text-slate-700" placeholder="請輸入含稅總額">
-                            </div>
+                            <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">預計總經費 (元)</label>
+                            <input type="number" id="plan_budget" class="w-full border-2 border-sky-200 rounded-2xl px-6 py-4 text-base focus:ring-4 focus:ring-sky-50 focus:border-sky-500 mb-6 font-bold outline-none bg-white transition text-slate-700" placeholder="含稅總額">
                         </div>
                     </div>
 
-                    <button onclick="generatePlanDoc()" class="w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5 mt-2">
+                    <button onclick="generatePlanDoc()" class="w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5 mt-2">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         生成計畫書
                     </button>
@@ -759,35 +750,6 @@
     </div>
 
     <script>
-        // --- 改造項目知識庫 (補助比例與描述) ---
-        const PLAN_CONFIG = {
-            "green_roof": { 
-                title: "生物多樣性與綠化 (綠屋頂)", 
-                ratio: 0.5, 
-                desc: "於社區頂樓閒置空間建置薄層綠屋頂，種植原生耐旱植栽，增加綠覆率並降低頂樓室內溫度，減少空調耗能。" 
-            },
-            "insulation": { 
-                title: "建築外殼節能 (隔熱)", 
-                ratio: 0.4, 
-                desc: "於建築物外牆或屋頂塗佈隔熱漆，或鋪設隔熱磚，以阻絕熱能傳導，降低室內空調負荷。" 
-            },
-            "lighting": { 
-                title: "公共區域照明改善", 
-                ratio: 0.3, 
-                desc: "汰換社區地下室停車場、梯間及公共走廊之老舊T8/T5燈具，全面更換為具節能標章之高效率LED燈具，提升照度並節省電費。" 
-            },
-            "water": { 
-                title: "水資源再利用 (雨水回收)", 
-                ratio: 0.5, 
-                desc: "設置雨水貯留桶與回收管線，收集屋頂或地面雨水，經簡易過濾後用於中庭植栽澆灌與公共區域清洗，減少自來水使用。" 
-            },
-            "energy": { 
-                title: "再生能源應用", 
-                ratio: 0.4, 
-                desc: "於社區適當空間設置小型風力發電或太陽能光電系統，並與社區公共用電併聯，提升綠色能源使用比例。" 
-            }
-        };
-
         function showHelperModal() {
             document.getElementById('helperModal').classList.remove('hidden');
             document.getElementById('helperModal').classList.add('flex');
@@ -944,127 +906,49 @@
             }
         }
 
-        // --- 標章申請表生成 ---
         function generateCertDoc() {
             const name = document.getElementById('cert_name').value;
             if(!name) { alert("請填寫名稱"); return; }
             const households = document.getElementById('households').value || "未填寫";
             const grade = document.querySelector('input[name="cert_grade"]:checked').value;
             const score = document.getElementById('totalScore').innerText;
-            
-            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType, BorderStyle } = docx;
-            
-            // 簡易表格樣式
-            const cellStyle = {
-                borders: {
-                    top: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                    bottom: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                    left: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                    right: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                },
-                margins: { top: 100, bottom: 100, left: 100, right: 100 }
-            };
-
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType } = docx;
             const doc = new Document({ sections: [{ children: [
                 new Paragraph({ text: "新北市低碳社區標章認證申請表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
                 new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: [
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("申請單位")], ...cellStyle }), new TableCell({ children: [new Paragraph(name)], ...cellStyle }) ]}),
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("戶數")], ...cellStyle }), new TableCell({ children: [new Paragraph(households + " 戶")], ...cellStyle }) ]}),
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("申請等級")], ...cellStyle }), new TableCell({ children: [new Paragraph(grade)], ...cellStyle }) ]}),
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("自評總分")], ...cellStyle }), new TableCell({ children: [new Paragraph(score + " 分")], ...cellStyle }) ]}),
+                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("申請單位")] }), new TableCell({ children: [new Paragraph(name)] }) ]}),
+                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("戶數")] }), new TableCell({ children: [new Paragraph(households + " 戶")] }) ]}),
+                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("申請等級")] }), new TableCell({ children: [new Paragraph(grade)] }) ]}),
+                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("自評總分")] }), new TableCell({ children: [new Paragraph(score + " 分")] }) ]}),
                 ]}),
-                new Paragraph({ text: "\n※ 由碳吉系統自動生成，依據使用者自評勾選結果。", color: "888888" })
+                new Paragraph({ text: "\n※ 由碳吉系統自動生成。", color: "888888" })
             ]}]});
             Packer.toBlob(doc).then(blob => saveAs(blob, `${name}_標章申請表.docx`));
         }
 
-        // --- 改造計畫書生成 (升級版) ---
         function generatePlanDoc() {
-            const name = document.getElementById('cert_name').value || "未命名社區";
-            const typeKey = document.getElementById('plan_type_select').value;
-            const currentStatus = document.getElementById('plan_current_status').value || "未填寫";
-            const improvementDetail = document.getElementById('plan_improvement_detail').value || "";
-            const totalBudget = parseInt(document.getElementById('plan_budget').value) || 0;
+            const name = document.getElementById('cert_name').value || "未命名社區"; 
+            const typeSelect = document.getElementById('plan_type');
+            const typeText = typeSelect.options[typeSelect.selectedIndex].text;
+            const percentage = parseInt(typeSelect.value) / 100;
+            const total = parseInt(document.getElementById('plan_budget').value) || 0;
             
-            // 讀取 Knowledge Base
-            const planInfo = PLAN_CONFIG[typeKey];
-            const subsidyAmt = Math.floor(totalBudget * planInfo.ratio);
-            const selfAmt = totalBudget - subsidyAmt;
-            
-            // 組合完整的說明文字
-            const finalDesc = improvementDetail ? `${planInfo.desc} (${improvementDetail})` : planInfo.desc;
-
-            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType, BorderStyle } = docx;
-            
-            const cellStyle = {
-                borders: {
-                    top: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                    bottom: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                    left: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                    right: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                },
-                margins: { top: 100, bottom: 100, left: 100, right: 100 }
-            };
-
-            const doc = new Document({
-                sections: [{
-                    children: [
-                        // 標題
-                        new Paragraph({ text: "114年度新北市低碳社區改造補助計畫申請表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
-                        
-                        // 一、基本資料
-                        new Paragraph({ text: "一、基本資料", heading: docx.HeadingLevel.HEADING_2, spacing: { after: 200 } }),
-                        new Table({
-                            width: { size: 100, type: WidthType.PERCENTAGE },
-                            rows: [
-                                new TableRow({ children: [ 
-                                    new TableCell({ children: [new Paragraph("申請單位")], width: {size: 30, type: WidthType.PERCENTAGE}, ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(name)], ...cellStyle })
-                                ]}),
-                                // 可在此處擴充更多基本資料欄位 (如地址、負責人等)
-                            ]
-                        }),
-
-                        new Paragraph({ text: "", spacing: { after: 300 } }),
-
-                        // 二、改造計畫與經費
-                        new Paragraph({ text: "二、改造項目與經費評估", heading: docx.HeadingLevel.HEADING_2, spacing: { after: 200 } }),
-                        new Table({
-                            width: { size: 100, type: WidthType.PERCENTAGE },
-                            rows: [
-                                new TableRow({ children: [
-                                    new TableCell({ children: [new Paragraph({text: "改造項目", bold: true})], ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(planInfo.title)], ...cellStyle })
-                                ]}),
-                                new TableRow({ children: [
-                                    new TableCell({ children: [new Paragraph({text: "現況說明", bold: true})], ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(currentStatus)], ...cellStyle })
-                                ]}),
-                                new TableRow({ children: [
-                                    new TableCell({ children: [new Paragraph({text: "改善方式", bold: true})], ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(finalDesc)], ...cellStyle })
-                                ]}),
-                                new TableRow({ children: [
-                                    new TableCell({ children: [new Paragraph({text: "預估總經費", bold: true})], ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(`NT$ ${totalBudget.toLocaleString()}`)], ...cellStyle })
-                                ]}),
-                                new TableRow({ children: [
-                                    new TableCell({ children: [new Paragraph(`申請補助 (${planInfo.ratio*100}%)`)], ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(`NT$ ${subsidyAmt.toLocaleString()}`)], ...cellStyle })
-                                ]}),
-                                new TableRow({ children: [
-                                    new TableCell({ children: [new Paragraph("自籌金額")], ...cellStyle }),
-                                    new TableCell({ children: [new Paragraph(`NT$ ${selfAmt.toLocaleString()}`)], ...cellStyle })
-                                ]}),
-                            ]
-                        }),
-                        
-                        new Paragraph({ text: "\n※ 本表由碳吉平台自動生成，請列印後蓋社區大章送件。", alignment: AlignmentType.CENTER, color: "888888", spacing: { before: 400 } })
-                    ]
-                }]
-            });
-
-            Packer.toBlob(doc).then(blob => saveAs(blob, `${name}_改造補助計畫書.docx`);
+            const subsidy = Math.floor(total * percentage);
+            const self = total - subsidy;
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType } = docx;
+            const doc = new Document({ sections: [{ children: [
+                new Paragraph({ text: "新北市低碳社區改造補助計畫申請表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
+                new Paragraph({ text: `1. 申請單位：${name}` }), 
+                new Paragraph({ text: `2. 改造項目：${typeText}\n` }),
+                new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: [
+                    new TableRow({ children: [new TableCell({ children: [new Paragraph("項目")] }), new TableCell({ children: [new Paragraph("金額")] })] }),
+                    new TableRow({ children: [new TableCell({ children: [new Paragraph("預計總經費")] }), new TableCell({ children: [new Paragraph(total.toLocaleString() + " 元")] })] }),
+                    new TableRow({ children: [new TableCell({ children: [new Paragraph("申請補助")] }), new TableCell({ children: [new Paragraph(subsidy.toLocaleString() + " 元")] })] }),
+                    new TableRow({ children: [new TableCell({ children: [new Paragraph("自籌金額")] }), new TableCell({ children: [new Paragraph(self.toLocaleString() + " 元")] })] }),
+                ]}),
+                new Paragraph({ text: "\n※ 由碳吉系統自動生成。", color: "888888" })
+            ]}]});
+            Packer.toBlob(doc).then(blob => saveAs(blob, `${name}_改造計畫書.docx`));
         }
     </script>
 </body>
