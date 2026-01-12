@@ -225,7 +225,6 @@
                 <p class="text-lg font-medium">拖曳照片至此 或 點擊上方匯入</p>
                 <p class="text-sm opacity-70 mt-1">支援多檔上傳、滾輪縮放、拖曳平移</p>
             </div>
-            <!-- Removed transition for smoother drag, added display: none to prevent broken icon -->
             <img id="currentImage" class="max-w-none origin-center hidden" style="transform: translate(0px, 0px) scale(1); display: none;">
         </div>
 
@@ -286,7 +285,7 @@
                 </div>
                 <div class="flex items-center space-x-6">
                     <!-- New Highly Visible Button (Animation Removed) -->
-                    <button onclick="toggleCompareMode()" class="flex items-center px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl hover:from-emerald-600 hover:to-teal-700 transition-all duration-200 font-bold shadow-lg hover:shadow-emerald-500/40 hover:scale-105 border-2 border-emerald-400 ring-2 ring-emerald-100/50">
+                    <button onclick="toggleCompareMode()" class="flex items-center px-5 py-2.5 bg-emerald-700 text-white rounded-xl hover:bg-emerald-800 transition-all duration-200 font-bold shadow-lg border-2 border-emerald-600">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
                         紙本對照模式
                     </button>
