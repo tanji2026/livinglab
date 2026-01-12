@@ -186,6 +186,16 @@
         .image-viewer-container:active {
             cursor: grabbing;
         }
+        
+        /* 按鈕光暈動畫 */
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-700 selection:bg-emerald-100 selection:text-emerald-800 relative overflow-x-hidden">
@@ -215,8 +225,8 @@
                 <p class="text-lg font-medium">拖曳照片至此 或 點擊上方匯入</p>
                 <p class="text-sm opacity-70 mt-1">支援多檔上傳、滾輪縮放、拖曳平移</p>
             </div>
-            <!-- Removed transition for smoother drag -->
-            <img id="currentImage" src="" class="max-w-none origin-center hidden" style="transform: translate(0px, 0px) scale(1);">
+            <!-- Removed transition for smoother drag, added display: none to prevent broken icon -->
+            <img id="currentImage" class="max-w-none origin-center hidden" style="transform: translate(0px, 0px) scale(1); display: none;">
         </div>
 
         <div class="p-3 bg-slate-800 border-t border-slate-700 flex justify-between items-center text-white">
@@ -480,7 +490,7 @@
                                     <h4 class="text-amber-700 font-bold mb-3 text-sm uppercase tracking-wider">5. 應用再生能源 (8分)</h4>
                                     <div class="grid grid-cols-2 gap-3">
                                         <div class="col-span-2 grid grid-cols-3 gap-3 bg-amber-50/50 p-2 rounded-xl border border-amber-100"><p class="col-span-3 text-xs text-amber-700 font-bold px-1">再生能源裝置 (擇一)</p>
-                                            <label class="option-card group-amber"><input type="radio" name="renew_energy" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">評估未設</span><span class="score-tag">1分</span></div></label>
+                                            <label class="option-card group-amber"><input type="radio" name="renew_energy" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">評估未設</span><span class="score-tag">1分</span></div></div></label>
                                             <label class="option-card group-amber"><input type="radio" name="renew_energy" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">&lt; 2kW</span><span class="score-tag">2分</span></div></div></label>
                                             <label class="option-card group-amber"><input type="radio" name="renew_energy" value="3" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">&gt; 2kW</span><span class="score-tag">3分</span></div></div></label>
                                         </div>
@@ -699,12 +709,12 @@
                             <div class="py-4">
                                 <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">標章獎金</p>
                                 <p id="rewardMoney" class="text-4xl font-extrabold text-slate-800">NT$ 0</p>
-                                <p class="text-xs text-rose-500 mt-3 font-bold bg-rose-50 inline-block px-3 py-1 rounded-full">3/13 截止</p>
+                                <p class="text-xs text-rose-500 mt-3 font-bold bg-rose-50 inline-block px-3 py-1 rounded-full">3/14 截止</p>
                             </div>
                             <div class="py-4">
                                 <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">改造補助上限</p>
                                 <p id="subsidyMoney" class="text-4xl font-extrabold text-slate-800">NT$ 0</p>
-                                <p class="text-xs text-blue-500 mt-3 font-bold bg-blue-50 inline-block px-3 py-1 rounded-full">第一階段 4/15 截止</p>
+                                <p class="text-xs text-blue-500 mt-3 font-bold bg-blue-50 inline-block px-3 py-1 rounded-full">4/15 截止</p>
                             </div>
                         </div>
                         <div class="mt-10 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
@@ -1086,6 +1096,7 @@
             if (images.length > 0) {
                 imgEl.src = images[currentImageIndex];
                 imgEl.classList.remove('hidden');
+                imgEl.style.display = 'block'; // Make sure display is block when loaded
                 emptyState.classList.add('hidden');
                 updateCounter();
                 resetZoom(); // Reset zoom on new image load
