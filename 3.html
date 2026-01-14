@@ -941,9 +941,18 @@
 
         function addToSidebarGallery(url) {
             const div = document.createElement('div');
-            div.className = 'bg-slate-800 p-2 rounded-lg relative group mb-4 border border-slate-700';
+            div.className = 'bg-slate-800 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
             div.innerHTML = `<img src="${url}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
+            div.onclick = () => selectSidebarImage(url);
             document.getElementById('sidebarGallery').prepend(div);
+        }
+
+        function selectSidebarImage(url) {
+            const index = images.indexOf(url);
+            if (index !== -1) {
+                currentImageIndex = index;
+                renderImage();
+            }
         }
 
         function renderImage() {
@@ -1273,8 +1282,9 @@
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         const div = document.createElement('div');
-                        div.className = 'bg-slate-700 p-2 rounded-lg relative group mb-4 border border-slate-700';
+                        div.className = 'bg-slate-700 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
                         div.innerHTML = `<img src="${e.target.result}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
+                        div.onclick = () => selectSidebarImage(e.target.result);
                         document.getElementById('sidebarGallery').prepend(div);
                     }
                     reader.readAsDataURL(file);
@@ -1282,21 +1292,60 @@
             }
         }
 
-        function base64DataURLToArrayBuffer(dataURL) {
-            const base64Regex = /^data:image\/(png|jpg|jpeg|svg\+xml);base64,/;
-            if (!base64Regex.test(dataURL)) return null;
-            const stringBase64 = dataURL.replace(base64Regex, "");
-            let binaryString;
-            try {
-                binaryString = window.atob(stringBase64);
-            } catch (e) {
-                console.error("Base64 decode failed", e);
-                return null;
+        function selectSidebarImage(url) {
+            // Find index or just push to images if not found (though reader.onload is redundant if we use blob urls, but here we use base64 for sidebar to be consistent with main upload)
+            // But wait, handleImageUpload uses createObjectURL which is blob.
+            // Let's stick to blob for sidebar to avoid huge memory usage with base64 strings if possible, 
+            // BUT for drag and drop to work seamlessly with our unified buffer function, we need to handle both.
+            
+            // If the url is base64 (from the new reader.onload above), we can just display it.
+            // If it's a blob url (from handleImageUpload), we display it too.
+            const imgEl = document.getElementById('currentImage');
+            const emptyState = document.getElementById('emptyState');
+            
+            imgEl.src = url;
+            imgEl.classList.remove('hidden');
+            imgEl.style.display = 'block'; 
+            emptyState.classList.add('hidden');
+            
+            // Also update currentImageIndex if it's in the images array
+            const idx = images.indexOf(url);
+            if(idx !== -1) currentImageIndex = idx;
+            
+            resetZoom();
+        }
+
+        async function getImageBuffer(src) {
+            if (!src) return null;
+            
+            // Case 1: Base64
+            if (src.startsWith('data:')) {
+                const base64Regex = /^data:image\/(png|jpg|jpeg|svg\+xml);base64,/;
+                if (!base64Regex.test(src)) return null;
+                const stringBase64 = src.replace(base64Regex, "");
+                let binaryString;
+                try {
+                    binaryString = window.atob(stringBase64);
+                } catch (e) {
+                    console.error("Base64 decode failed", e);
+                    return null;
+                }
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+                return bytes.buffer;
+            } 
+            // Case 2: Blob URL or HTTP URL
+            else if (src.startsWith('blob:') || src.startsWith('http')) {
+                try {
+                    const response = await fetch(src);
+                    return await response.arrayBuffer();
+                } catch (e) {
+                    console.error("Fetch failed for image source", e);
+                    return null;
+                }
             }
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
-            return bytes.buffer;
+            return null;
         }
 
         async function generateWord() {
@@ -1386,8 +1435,9 @@
                     
                     for(let i=0; i<3; i++) {
                         let cellContent = [];
-                        if(imgs[i] && imgs[i].src && !imgs[i].classList.contains('hidden') && imgs[i].src.startsWith('data:')) {
-                            const buffer = base64DataURLToArrayBuffer(imgs[i].src);
+                        if(imgs[i] && imgs[i].src && !imgs[i].classList.contains('hidden')) {
+                            // Now we use the robust getImageBuffer which handles both base64 and blobs
+                            const buffer = await getImageBuffer(imgs[i].src);
                             if(buffer) {
                                 cellContent.push(new Paragraph({
                                     children: [new ImageRun({
@@ -1396,8 +1446,6 @@
                                     })],
                                     alignment: AlignmentType.CENTER
                                 }));
-                            } else {
-                                console.error("Buffer conversion failed for image", i);
                             }
                         } else {
                             cellContent.push(new Paragraph(""));
