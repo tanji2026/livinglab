@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表四佐證資料編輯器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Noto Sans TC', 'sans-serif'] },
+                    colors: { emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        .drop-zone { transition: all 0.2s; border: 2px dashed #cbd5e1; }
+        .drop-zone.drag-over { border-color: #10b981; background-color: #ecfdf5; transform: scale(1.02); }
+        .draggable-source { cursor: grab; }
+        .draggable-source:active { cursor: grabbing; }
+    </style>
+</head>
+<body class="bg-slate-100 h-screen flex overflow-hidden">
+
+    <!-- 左側：紙本對照區 -->
+    <div class="w-1/3 bg-slate-800 text-white flex flex-col border-r border-slate-700 shadow-2xl z-10">
+        <div class="p-4 border-b border-slate-700 bg-slate-900">
+            <h3 class="font-bold text-lg flex items-center">
+                <svg class="w-5 h-5 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                紙本/照片來源區
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">請上傳照片並拖曳至右側表格</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+            <label class="block w-full border-2 border-dashed border-slate-600 rounded-lg p-8 text-center cursor-pointer hover:border-emerald-500 hover:text-emerald-400 transition text-slate-400">
+                <input type="file" class="hidden" multiple accept="image/*" onchange="handleSidebarUpload(this)">
+                <span>+ 上傳更多照片</span>
+            </label>
+            <div id="sidebarGallery" class="space-y-4">
+                <!-- 上傳的照片會出現在這裡 -->
+                <div class="bg-slate-700 p-2 rounded-lg">
+                    <p class="text-xs text-slate-300 mb-2">範例照片</p>
+                    <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&q=80" 
+                         class="w-full h-40 object-cover rounded draggable-source" 
+                         draggable="true" ondragstart="drag(event)" crossorigin="anonymous">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右側：佐證資料編輯器 -->
+    <div class="w-2/3 flex flex-col h-full">
+        <div class="bg-white p-4 border-b border-slate-200 shadow-sm flex justify-between items-center z-20">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">表四、社區現況佐證表</h2>
+                <p class="text-sm text-slate-500">已依照指示：照片間有分隔線，末端加入總分統計。</p>
+            </div>
+            <button onclick="generateWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-medium flex items-center transition">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                生成 Word 檔
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-8 bg-slate-50" id="editorContainer">
+            <!-- 這裡會由 JS 自動生成所有指標卡片 -->
+        </div>
+    </div>
+
+    <script>
+        // --- 1. 定義完整的指標資料結構 (依照 PDF) ---
+        const categories = [
+            {
+                title: "1. 生物多樣性 (6)",
+                items: ["原生種植栽(1)", "多層次植栽(1)", "生態景觀池(1)", "生態邊坡(1)", "環境教育解說牌(1)", "管理維護情形(1)"]
+            },
+            {
+                title: "2. 綠化量 (10)",
+                items: ["訂定規約開放屋頂(1)", "設立參與式屋頂農園或花園(1)", "綠屋頂面積>70m²或>20%(1)", "綠牆綠廊(2)", "綠覆率>15%(1)或>30%(2)", "綠化解說牌(1)", "綠化維護現況(2)"]
+            },
+            {
+                title: "3. 日常節能 (33)",
+                items: ["使用隔熱貼紙(1)", "設置外遮陽(1)", "公共照明節能(1~3)", "常開指示燈節能(1~3)", "紅外線感應(1)", "空調系統合理使用(1)", "空調系統使用現況(2)", "電梯自動關閉(1)", "尖峰排風(1)", "電梯與排風管理(2)", "ESPC或類似模式(2)", "節能設施環教牌(1)", "數位電錶管理(2)", "日常節能維護(2)"]
+            },
+             {
+                title: "4. 水資源 (11)",
+                items: ["節能E好宅(1~10)", "使用省水器材(1)", "管線漏水檢測(1)", "雨水利用(1~2)", "雨水管線配置(2)", "雨水利用辦法(1)", "雜用水管線(2)", "雜用水辦法(1)", "水資源回收解說牌(1)"]
+            },
+             {
+                title: "5. 再生能源 (8)",
+                items: ["再生能源評估/設置(1~3)", "熱泵/太陽熱水器(2)", "再生能源解說牌(1)", "發電裝置維護紀錄(2)"]
+            },
+            {
+                title: "6. 垃圾源頭減量 (5)",
+                items: ["不使用免洗餐具(1)", "推廣惜食生活(1)", "以租代買(1)", "統計資料庫揭露(2)"]
+            },
+             {
+                title: "7. 資源回收 (9)",
+                items: ["設立資源回收區(1)", "資源回收分類(3)", "廚餘妥善收運(1)", "回收宣導海報(1)", "資源回收現況(3)"]
+            },
+            {
+                title: "8. 再利用 (9)",
+                items: ["二手物交換(2)", "落葉堆肥(2)", "廚餘堆肥(2)", "廢食用油回收(1)", "家具修繕(1)", "資源循環解說牌(1)"]
+            },
+             {
+                title: "9. 大眾運輸 (2)",
+                items: ["宣導活動及海報(1)", "友善步行空間(1)"]
+            },
+            {
+                title: "10. 共乘 (2)",
+                items: ["設立共乘辦法(1)", "張貼共乘海報(1)"]
+            },
+            {
+                title: "11. 自行車 (5)",
+                items: ["自行車停車區(1)", "自行車架/租借(1)", "綠色交通解說牌(1)", "自行車使用現況(1)"]
+            },
+            {
+                title: "12. 電動運具 (11)",
+                items: ["電動機車停車/充電(1)", "電動機車持有率(1~2)", "推廣活動海報(1)", "電動汽車推廣(1)", "電動汽車充電設施(1)", "電動汽車停車區(1)", "電動汽車持有率(1~2)", "電動運具解說牌(1)", "電動運具使用現況(1)"]
+            },
+             {
+                title: "13. 永續生活實踐 (10)",
+                items: ["省水宣導(1)", "用水降低(1)", "省電宣導(1)", "用電降低(1)", "綠色競賽(1)", "推廣節電省水活動(1~2)", "參訪與觀摩(2)"]
+            },
+            {
+                title: "14. 管理團隊 (6)",
+                items: ["無紙化推廣(1)", "3個月開會討論(2)", "小組成員研習(1~4)"]
+            },
+             {
+                title: "15. 綠色消費 (6)",
+                items: ["綠色團購機制(1)", "採購綠色商品(2)", "團購金額額度(1~3)"]
+            },
+             {
+                title: "16. 低碳飲食 (3)",
+                items: ["張貼宣導海報(1)", "辦理活動及紀錄(2)"]
+            },
+             {
+                title: "17. 空氣品質 (4)",
+                items: ["辦理宣導活動(1)", "公共區域示範(1)", "紙錢減燒(1)", "金紙統一收取(1)"]
+            },
+            {
+                title: "18. 創新作為 (10)",
+                items: ["具在地特色低碳作為(10)"]
+            }
+        ];
+
+        // --- 2. 初始化介面 (自動生成所有卡片) ---
+        function initEditor() {
+            const container = document.getElementById('editorContainer');
+            let html = '';
+            
+            categories.forEach((cat, catIndex) => {
+                html += `<div class="mb-8 border-l-4 border-emerald-500 pl-4 bg-emerald-50/50 py-2 rounded-r-lg">
+                            <h3 class="text-xl font-black text-emerald-800">${cat.title}</h3>
+                         </div>`;
+                
+                cat.items.forEach((item, itemIndex) => {
+                    const uniqueId = `c${catIndex}_i${itemIndex}`;
+                    // 在 HTML 標籤中儲存 catIndex 和 itemIndex 以便生成 Word 時辨識
+                    html += `
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-6 overflow-hidden item-card" 
+                         data-cat-title="${cat.title}" 
+                         data-item-name="${item}" 
+                         data-is-first="${itemIndex === 0}" 
+                         data-row-span="${cat.items.length}">
+                        <div class="bg-slate-50 p-4 border-b border-slate-100 flex justify-between items-center">
+                            <h4 class="font-bold text-slate-700 text-lg">${item}</h4>
+                            <select onchange="changeState(this)" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2">
+                                <option value="exist" selected>🟢 已有成果</option>
+                                <option value="plan">🔵 擬改造</option>
+                                <option value="none">⚪ 不適合</option>
+                            </select>
+                        </div>
+                        
+                        <div class="p-6 content-area">
+                            <!-- 狀態 A: 已有成果 -->
+                            <div class="state-exist grid grid-cols-3 gap-4 mb-4">
+                                <div class="col-span-3 grid grid-cols-3 gap-4">
+                                    ${generatePhotoBox('左側/遠景')}
+                                    ${generatePhotoBox('中間/中景')}
+                                    ${generatePhotoBox('右側/特寫')}
+                                </div>
+                            </div>
+
+                            <!-- 狀態 B: 擬改造 -->
+                            <div class="state-plan hidden mb-4">
+                                <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-4">
+                                    <h5 class="text-blue-800 text-sm font-bold mb-2">擬改造示意圖</h5>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        ${generatePhotoBox('示意圖')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 狀態 C: 不適用 -->
+                            <div class="state-none hidden mb-4">
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-500 text-sm">
+                                    <span class="font-bold">提示：</span> 免附照片，請說明原因。
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1 description-label">現況描述 (必填)</label>
+                                <textarea class="w-full border-slate-300 rounded-lg p-3 text-sm focus:ring-emerald-500 focus:border-emerald-500 shadow-sm" rows="2" placeholder="請輸入說明..."></textarea>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            });
+            container.innerHTML = html;
+        }
+
+        function generatePhotoBox(label) {
+            return `
+            <div class="drop-zone border-2 border-dashed border-slate-300 rounded-lg p-2 text-center flex flex-col items-center justify-center min-h-[140px] relative bg-slate-50"
+                    ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="drop(event)">
+                <div class="empty-state pointer-events-none">
+                    <span class="text-xs text-slate-500 block">拖曳照片</span>
+                    <span class="text-[10px] text-slate-400 block mt-1">(${label})</span>
+                </div>
+                <img class="preview-img hidden w-full h-full object-cover rounded absolute inset-0 z-10">
+                <button onclick="clearImage(this)" class="hidden absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 z-20 hover:bg-red-600 shadow-md transform scale-75"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>`;
+        }
+
+        window.onload = initEditor;
+
+        // --- 3. 拖曳與狀態切換邏輯 ---
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.src);
+            ev.dataTransfer.effectAllowed = "copy";
+        }
+        function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+        function leaveDrop(ev) { ev.currentTarget.classList.remove('drag-over'); }
+        function drop(ev) {
+            ev.preventDefault();
+            const container = ev.currentTarget;
+            container.classList.remove('drag-over');
+            const src = ev.dataTransfer.getData("text");
+            if (src) {
+                const img = container.querySelector('.preview-img');
+                const empty = container.querySelector('.empty-state');
+                const btn = container.querySelector('button');
+                img.src = src; img.classList.remove('hidden');
+                if(empty) empty.classList.add('hidden');
+                if(btn) btn.classList.remove('hidden');
+            }
+        }
+        function clearImage(btn) {
+            const container = btn.parentElement;
+            const img = container.querySelector('.preview-img');
+            const empty = container.querySelector('.empty-state');
+            img.src = ''; img.classList.add('hidden'); btn.classList.add('hidden');
+            if(empty) empty.classList.remove('hidden');
+        }
+        function changeState(select) {
+            const card = select.closest('.item-card');
+            const state = select.value;
+            const exist = card.querySelector('.state-exist');
+            const plan = card.querySelector('.state-plan');
+            const none = card.querySelector('.state-none');
+            const label = card.querySelector('.description-label');
+            
+            exist.classList.add('hidden'); plan.classList.add('hidden'); none.classList.add('hidden');
+            
+            if (state === 'exist') { exist.classList.remove('hidden'); label.innerText = '現況描述 (必填)'; label.classList.remove('text-red-600'); }
+            else if (state === 'plan') { plan.classList.remove('hidden'); label.innerText = '擬改造內容描述 (必填)'; label.classList.remove('text-red-600'); }
+            else { none.classList.remove('hidden'); label.innerText = '不適用說明 (必填)'; label.classList.add('text-red-600'); }
+        }
+        function handleSidebarUpload(input) {
+            if(input.files && input.files.length > 0) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'bg-slate-700 p-2 rounded-lg relative group mb-4';
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-40 object-cover rounded draggable-source" draggable="true" ondragstart="drag(event)">`;
+                        document.getElementById('sidebarGallery').prepend(div);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        // --- 4. 生成 Word (精準還原版) ---
+        function base64DataURLToArrayBuffer(dataURL) {
+            const base64Regex = /^data:image\/(png|jpg|jpeg|svg\+xml);base64,/;
+            if (!base64Regex.test(dataURL)) return null;
+            const stringBase64 = dataURL.replace(base64Regex, "");
+            let binaryString = window.atob(stringBase64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+            return bytes.buffer;
+        }
+
+        async function generateWord() {
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, VerticalAlign, TextRun, ImageRun, PageOrientation, AlignmentType, BorderStyle, TableLayoutType } = docx;
+
+            const rows = [];
+            
+            // --- 表頭設計 (左右分割) ---
+            rows.push(new TableRow({
+                children: [
+                    // Col 1 & 2: 項目 (跨2欄)
+                    new TableCell({ children: [new Paragraph({ text: "項目", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    
+                    // Col 3: 社區現況 (窄欄，直書)
+                    new TableCell({ children: [new Paragraph({ text: "社區\n現況", bold: true, alignment: AlignmentType.CENTER })], width: { size: 5, type: WidthType.PERCENTAGE }, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    
+                    // Col 4: 說明文字 (寬欄) - 這裡需要跨 3 個欄位，對應下方三張照片的欄位
+                    new TableCell({ 
+                        children: [
+                            new Paragraph({ text: "1.已有成果則插入3張圖片(不同位置、角度)佐證並描述現況。", size: 18 }),
+                            new Paragraph({ text: "2.未有成果欲於計畫中提出者，可插入擬改造的示意圖後，描述擬改造的內容。", size: 18 }),
+                            new Paragraph({ text: "3.社區現況不適合該項目，則免於提供佐證，但需提出說明。", size: 18 }),
+                        ],
+                        width: { size: 45, type: WidthType.PERCENTAGE },
+                        columnSpan: 3, // 關鍵修改：讓說明欄位跨越下方的 3 個照片欄位
+                        rowSpan: 2, 
+                        verticalAlign: VerticalAlign.CENTER
+                    }),
+                    
+                    // Col 5: 文字敘述
+                    new TableCell({ children: [new Paragraph({ text: "文字敘述", bold: true, alignment: AlignmentType.CENTER })], width: { size: 25, type: WidthType.PERCENTAGE }, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    
+                    // Col 6 & 7: 得分 (跨2欄)
+                    new TableCell({ children: [new Paragraph({ text: "得分", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                ]
+            }));
+
+            // Row 2: 得分細項 (自評/初審)
+            rows.push(new TableRow({
+                children: [
+                    // 前面的欄位被 rowSpan 佔用
+                    new TableCell({ children: [new Paragraph({ text: "自評", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [new Paragraph({ text: "初審", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                ]
+            }));
+
+            // --- 資料列 (Data Rows) ---
+            const cards = document.querySelectorAll('.item-card');
+            
+            for (let card of cards) {
+                const catTitle = card.dataset.catTitle;
+                const itemName = card.dataset.itemName;
+                const isFirst = card.dataset.isFirst === "true";
+                const rowSpanCount = parseInt(card.dataset.rowSpan);
+                const state = card.querySelector('select').value;
+                const descText = card.querySelector('textarea').value || (state === 'none' ? "本社區無此設施/不適用。" : "");
+                
+                // 計算分數 - 預設為空字串，不適用則為 "0"
+                let scoreText = ""; 
+                if (state === 'none') {
+                    scoreText = "0";
+                } 
+
+                // 建立該列的儲存格
+                const cells = [];
+
+                // 1. 大項 (Category) - 使用 RowSpan
+                if (isFirst) {
+                    cells.push(new TableCell({ 
+                        children: [new Paragraph({ text: catTitle, alignment: AlignmentType.CENTER })], 
+                        verticalAlign: VerticalAlign.CENTER,
+                        rowSpan: rowSpanCount,
+                        width: { size: 5, type: WidthType.PERCENTAGE }
+                    }));
+                }
+
+                // 2. 細項 (Item)
+                cells.push(new TableCell({ 
+                    children: [new Paragraph({ text: itemName })], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 10, type: WidthType.PERCENTAGE }
+                }));
+
+                // 3, 4, 5. 照片欄位 (分開3格，這樣就有線了！)
+                if (state !== 'none') {
+                    const selector = state === 'exist' ? '.state-exist img.preview-img' : '.state-plan img.preview-img';
+                    const imgs = card.querySelectorAll(selector);
+                    
+                    for(let i=0; i<3; i++) {
+                        let cellContent = [];
+                        if(imgs[i] && imgs[i].src && !imgs[i].classList.contains('hidden') && imgs[i].src.startsWith('data:')) {
+                            const buffer = base64DataURLToArrayBuffer(imgs[i].src);
+                            if(buffer) {
+                                cellContent.push(new Paragraph({
+                                    children: [new ImageRun({
+                                        data: buffer,
+                                        transformation: { width: 100, height: 75 }, // 縮小適應欄位
+                                    })],
+                                    alignment: AlignmentType.CENTER
+                                }));
+                            }
+                        } else {
+                            cellContent.push(new Paragraph(""));
+                        }
+                        
+                        cells.push(new TableCell({
+                            children: cellContent,
+                            verticalAlign: VerticalAlign.CENTER,
+                            width: { size: 15, type: WidthType.PERCENTAGE } // 45% / 3 = 15%
+                        }));
+                    }
+                } else {
+                    // 不適用：合併這3格
+                    cells.push(new TableCell({
+                        children: [new Paragraph({ text: "不適用", alignment: AlignmentType.CENTER, color: "888888" })],
+                        verticalAlign: VerticalAlign.CENTER,
+                        columnSpan: 3,
+                        width: { size: 45, type: WidthType.PERCENTAGE }
+                    }));
+                }
+
+                // 6. 文字敘述
+                cells.push(new TableCell({ 
+                    children: [new Paragraph(descText)], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 25, type: WidthType.PERCENTAGE }
+                }));
+
+                // 7. 自評分數
+                cells.push(new TableCell({ 
+                    children: [new Paragraph({ text: scoreText, alignment: AlignmentType.CENTER })], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 7.5, type: WidthType.PERCENTAGE }
+                }));
+
+                // 8. 初審分數
+                cells.push(new TableCell({ children: [], verticalAlign: VerticalAlign.CENTER, width: { size: 7.5, type: WidthType.PERCENTAGE } }));
+
+                rows.push(new TableRow({ children: cells }));
+            }
+
+            const doc = new Document({
+                sections: [{
+                    properties: { page: { size: { orientation: PageOrientation.LANDSCAPE } } },
+                    children: [
+                        new Paragraph({ text: "表四、社區現況佐證表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 200 } }),
+                        new Table({
+                            layout: TableLayoutType.FIXED, // 固定寬度佈局確保照片欄位均等
+                            width: { size: 100, type: WidthType.PERCENTAGE },
+                            rows: rows
+                        }),
+                        // Footer
+                        new Paragraph({ 
+                            text: "改造前：      分；改造後：      分", 
+                            alignment: AlignmentType.RIGHT,
+                            spacing: { before: 300 },
+                            size: 24 // 稍微大一點
+                        })
+                    ],
+                }],
+            });
+
+            Packer.toBlob(doc).then(blob => saveAs(blob, "表四_社區現況佐證表_完整版.docx"));
+        }
+    </script>
+</body>
+</html>
