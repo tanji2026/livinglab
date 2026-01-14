@@ -83,7 +83,7 @@
         }
         input[type="radio"]:checked + .card-content .radio-dot { 
             display: block !important; 
-            background-color: currentColor; 
+            background-color: currentColor;
         }
 
         .group-emerald { color: #10b981; } 
@@ -160,13 +160,11 @@
             @apply opacity-100 translate-y-0;
         }
 
-        /* 倒三角形收合樣式 */
         details summary::-webkit-details-marker { display: none; }
         details summary { list-style: none; }
         details .triangle-icon { @apply transition-transform duration-200 transform; }
         details[open] .triangle-icon { @apply rotate-180; }
 
-        /* 紙本對照模式樣式 */
         body.compare-mode #comparison-sidebar {
             transform: translateX(0);
         }
@@ -187,7 +185,6 @@
             cursor: grabbing;
         }
         
-        /* 按鈕光暈動畫 */
         @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
@@ -196,16 +193,20 @@
         .animate-pulse-ring {
             animation: pulse-ring 2s infinite;
         }
+
+        .drop-zone { transition: all 0.2s; border: 2px dashed #cbd5e1; }
+        .drop-zone.drag-over { border-color: #10b981; background-color: #ecfdf5; transform: scale(1.02); }
+        .draggable-source { cursor: grab; }
+        .draggable-source:active { cursor: grabbing; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-700 selection:bg-emerald-100 selection:text-emerald-800 relative overflow-x-hidden">
 
-    <!-- Comparison Sidebar (Digital Lightbox) -->
     <div id="comparison-sidebar" class="fixed top-16 left-0 w-1/2 h-[calc(100vh-4rem)] bg-slate-900 z-40 border-r border-slate-700 flex flex-col transform -translate-x-full shadow-2xl">
         <div class="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center text-white">
             <div class="flex items-center gap-2">
                 <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                <h3 class="font-bold text-lg">紙本對照工作台</h3>
+                <h3 class="font-bold text-lg">照片工作台</h3>
             </div>
             <div class="flex items-center gap-2">
                 <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center shadow-lg border border-white/10">
@@ -219,44 +220,35 @@
             </div>
         </div>
         
-        <div class="flex-grow relative overflow-hidden bg-slate-900 flex items-center justify-center image-viewer-container" id="imageViewer" onmousedown="startDrag(event)" onmousemove="drag(event)" onmouseup="endDrag()" onmouseleave="endDrag()" onwheel="zoomImage(event)">
-            <div id="emptyState" class="text-center text-slate-500 pointer-events-none">
-                <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                <p class="text-lg font-medium">拖曳照片至此 或 點擊上方匯入</p>
-                <p class="text-sm opacity-70 mt-1">支援多檔上傳、滾輪縮放、拖曳平移</p>
+        <div class="flex-grow flex flex-col p-4 space-y-4 overflow-y-auto">
+            <div id="imageViewer" class="relative bg-slate-800 rounded-xl overflow-hidden border border-slate-700 min-h-[300px] flex items-center justify-center image-viewer-container" onmousedown="startDrag(event)" onmousemove="dragImage(event)" onmouseup="endDrag()" onmouseleave="endDrag()" onwheel="zoomImage(event)">
+                <div id="emptyState" class="text-center text-slate-500 pointer-events-none">
+                    <p class="text-lg font-medium">預覽區域</p>
+                    <p class="text-sm opacity-70">點擊下方列表切換</p>
+                </div>
+                <img id="currentImage" class="max-w-none origin-center hidden" style="transform: translate(0px, 0px) scale(1);">
             </div>
-            <img id="currentImage" class="max-w-none origin-center hidden" style="transform: translate(0px, 0px) scale(1); display: none;">
-        </div>
 
-        <div class="p-3 bg-slate-800 border-t border-slate-700 flex justify-between items-center text-white">
-            <div class="text-sm text-slate-400 w-24"><span id="imgCounter">0 / 0</span></div>
-            <div class="flex gap-4">
-                <button onclick="prevImage()" class="p-2 bg-slate-700 rounded-full hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition" id="prevBtn">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
-                <button onclick="nextImage()" class="p-2 bg-slate-700 rounded-full hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition" id="nextBtn">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
+            <div class="flex justify-between items-center text-white bg-slate-800 p-2 rounded-lg border border-slate-700">
+                <div class="flex gap-2">
+                    <button onclick="adjustZoom(-0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
+                    <span id="zoomDisplay" class="text-sm w-12 text-center pt-1">100%</span>
+                    <button onclick="adjustZoom(0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
+                </div>
+                <div class="text-xs text-slate-400">滾輪縮放 / 拖曳移動</div>
             </div>
-            <div class="flex gap-2 w-32 justify-end items-center">
-                <button onclick="adjustZoom(-0.1)" class="p-1.5 bg-slate-700 rounded hover:bg-slate-600 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
-                </button>
-                <button onclick="resetZoom()" id="zoomDisplay" class="p-1.5 bg-slate-700 rounded hover:bg-slate-600 text-xs font-bold min-w-[3rem] transition text-center">100%</button>
-                <button onclick="adjustZoom(0.1)" class="p-1.5 bg-slate-700 rounded hover:bg-slate-600 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                </button>
+
+            <div class="text-white text-sm font-bold border-b border-slate-700 pb-2">照片列表 (可拖曳至右側表格)</div>
+            <div id="sidebarGallery" class="space-y-4 pb-12">
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="toast">
         <svg class="w-5 h-5 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         <span id="toastMsg" class="font-medium">已成功匯入紀錄</span>
     </div>
 
-    <!-- Reset Confirmation Modal -->
     <div id="resetModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[70] backdrop-blur-sm">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all scale-100">
             <div class="text-center">
@@ -273,7 +265,6 @@
         </div>
     </div>
 
-    <!-- Navbar -->
     <nav class="bg-white/90 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-slate-100 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -284,19 +275,17 @@
                     <span class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-teal-600 tracking-wide drop-shadow-sm">碳吉 TanJi</span>
                 </div>
                 <div class="flex items-center space-x-6">
-                    <!-- New Highly Visible Button (Animation Removed) -->
                     <button onclick="toggleCompareMode()" class="flex items-center px-5 py-2.5 bg-emerald-700 text-white rounded-xl hover:bg-emerald-800 transition-all duration-200 font-bold shadow-lg border-2 border-emerald-600">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
-                        紙本對照模式
+                        照片工作台
                     </button>
                     <a href="#assessment" class="text-slate-500 hover:text-emerald-600 font-medium transition text-sm md:text-base">低碳自評</a>
-                    <a href="#documents" class="text-slate-500 hover:text-emerald-600 font-medium transition text-sm md:text-base">文件生成</a>
+                    <a href="#documents" class="text-slate-500 hover:text-emerald-600 font-medium transition text-sm md:text-base">佐證編輯器</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content Wrapper -->
     <main id="main-content" class="w-full transition-all duration-300">
         <div class="hero-bg h-[55vh] flex items-center justify-center text-center px-4 pt-16 relative overflow-hidden">
             <div class="text-white max-w-4xl z-10">
@@ -359,8 +348,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                        <!-- 自評表單內容完全保留 -->
-                        <!-- 一、綠建築 -->
+                        <!-- 自評項目保持原樣 -->
                         <details class="bg-white rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition-shadow group/details overflow-hidden" open>
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -474,8 +462,7 @@
                                 </div>
                             </div>
                         </details>
-
-                        <!-- 二、綠色能源 -->
+                        <!-- (其他分類項目，以此類推，這裡省略以保持簡潔，實際部署時應包含所有指標) -->
                         <details class="bg-white rounded-2xl shadow-sm border border-amber-100 hover:shadow-md transition-shadow group/details overflow-hidden">
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -501,7 +488,6 @@
                             </div>
                         </details>
 
-                        <!-- 三、資源循環 -->
                         <details class="bg-white rounded-2xl shadow-sm border border-sky-100 hover:shadow-md transition-shadow group/details overflow-hidden">
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -548,7 +534,6 @@
                             </div>
                         </details>
 
-                        <!-- 四、綠色交通 -->
                         <details class="bg-white rounded-2xl shadow-sm border border-violet-100 hover:shadow-md transition-shadow group/details overflow-hidden">
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -605,7 +590,6 @@
                             </div>
                         </details>
 
-                        <!-- 五、永續生活環境 -->
                         <details class="bg-white rounded-2xl shadow-sm border border-orange-100 hover:shadow-md transition-shadow group/details overflow-hidden">
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -672,7 +656,6 @@
                             </div>
                         </details>
 
-                        <!-- 六、創新作為 -->
                         <details class="bg-white rounded-2xl shadow-sm border border-rose-100 hover:shadow-md transition-shadow group/details overflow-hidden">
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -693,7 +676,6 @@
                     </div>
                 </form>
 
-                <!-- 診斷報告區塊 (已補回) -->
                 <div id="resultArea" class="hidden mt-16 bg-white rounded-3xl shadow-xl overflow-hidden border border-emerald-100 relative">
                     <div class="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-center">
                         <h3 class="text-2xl font-bold text-white tracking-wide">碳吉診斷報告</h3>
@@ -731,84 +713,25 @@
         </div>
 
         <div id="documents" class="py-24 bg-slate-50 border-t border-slate-200">
-            <div class="max-w-5xl mx-auto px-4">
+            <div class="max-w-7xl mx-auto px-4">
                 <div class="text-center mb-12">
                     <span class="text-emerald-600 font-bold tracking-widest uppercase text-xs bg-emerald-100 px-3 py-1 rounded-full">STEP 2</span>
-                    <h2 class="text-3xl font-bold text-slate-800 mt-4">文件自動生成</h2>
+                    <h2 class="text-3xl font-bold text-slate-800 mt-4">表四佐證資料編輯器</h2>
                     <p class="mt-3 text-slate-500">一鍵產生符合 115 年度規範的正式申請書 (.docx)</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- 標章申請卡片 -->
-                    <div class="flex flex-col h-full justify-between bg-amber-50/50 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-amber-200 group relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-2 h-full bg-amber-600"></div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="bg-amber-100 p-3 rounded-xl text-amber-700 group-hover:scale-110 transition-transform">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">低碳社區標章認證申請表</h3>
-                            <p class="text-slate-500 text-sm mb-6 h-10">適用於申請銀鵝、金熊、白金級標章。</p>
-                            <div class="space-y-4 mb-8">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">申請單位 (社區全銜)</label>
-                                    <input type="text" id="cert_name" class="w-full border-slate-300 rounded-lg px-4 py-2 text-sm focus:ring-amber-500 focus:border-amber-500 bg-white" placeholder="如：XX社區管理委員會">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">申請等級</label>
-                                    <div class="flex gap-2">
-                                        <label class="flex-1 cursor-pointer"><input type="radio" name="cert_grade" value="銀鵝級" checked class="peer sr-only"><span class="block text-center py-2 px-3 border rounded-lg text-sm bg-white peer-checked:bg-amber-100 peer-checked:border-amber-500 peer-checked:text-amber-700 transition hover:bg-slate-50">銀鵝級</span></label>
-                                        <label class="flex-1 cursor-pointer"><input type="radio" name="cert_grade" value="金熊級" class="peer sr-only"><span class="block text-center py-2 px-3 border rounded-lg text-sm bg-white peer-checked:bg-amber-100 peer-checked:border-amber-500 peer-checked:text-amber-700 transition hover:bg-slate-50">金熊級</span></label>
-                                        <label class="flex-1 cursor-pointer"><input type="radio" name="cert_grade" value="白金級" class="peer sr-only"><span class="block text-center py-2 px-3 border rounded-lg text-sm bg-white peer-checked:bg-amber-100 peer-checked:border-amber-500 peer-checked:text-amber-700 transition hover:bg-slate-50">白金級</span></label>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="w-full flex flex-col h-full bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                    <div class="bg-white p-4 border-b border-slate-200 shadow-sm flex justify-between items-center z-20">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">表四、社區現況佐證表</h2>
                         </div>
-                        <button onclick="generateCertDoc()" class="w-full mt-auto bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5">
+                        <button onclick="generateWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-medium flex items-center transition">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            生成申請書
+                            生成 Word 檔
                         </button>
                     </div>
 
-                    <!-- 改造補助卡片 -->
-                    <div class="flex flex-col h-full justify-between bg-sky-50/50 p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-sky-200 group relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-2 h-full bg-sky-600"></div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="bg-sky-100 p-3 rounded-xl text-sky-700 group-hover:scale-110 transition-transform">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                </div>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">低碳社區改造補助計畫申請表</h3>
-                            <p class="text-slate-500 text-sm mb-6 h-10">申請硬體改造經費。自動計算補助與自籌金額。</p>
-                            
-                            <div class="space-y-2 mb-4">
-                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">主要改造項目 (114年補助比例)</label>
-                                <select id="plan_type" class="w-full border-2 border-sky-200 rounded-2xl px-6 py-4 text-base focus:ring-4 focus:ring-sky-50 focus:border-sky-500 mb-6 font-bold outline-none bg-white transition cursor-pointer text-slate-700">
-                                    <option value="50">生物多樣性與綠化 (補助50%)</option>
-                                    <option value="40">建築外殼-隔熱漆/磚 (補助40%)</option>
-                                    <option value="50">建築外殼-隔熱膜/遮陽 (補助50%)</option>
-                                    <option value="15">一般照明改善 (補助15%)</option>
-                                    <option value="30">老舊照明汰換(10年以上) (補助30%)</option>
-                                    <option value="30">動力設備節能(電梯/風機) (補助30%)</option>
-                                    <option value="40">用水管理(省水器材) (補助40%)</option>
-                                    <option value="50">雨水/中水回收系統 (補助50%)</option>
-                                    <option value="50">智慧節能管理系統 (補助50%)</option>
-                                    <option value="40">再生能源(太陽能/風力) (補助40%)</option>
-                                    <option value="40">資源回收/循環設施 (補助40%)</option>
-                                    <option value="50">電動運具設施 (補助50%)</option>
-                                </select>
-                                
-                                <label class="block text-xs font-bold text-sky-600 uppercase mb-1 px-1">預計總經費 (元)</label>
-                                <input type="number" id="plan_budget" class="w-full border-2 border-sky-200 rounded-2xl px-6 py-4 text-base focus:ring-4 focus:ring-sky-50 focus:border-sky-500 mb-6 font-bold outline-none bg-white transition text-slate-700" placeholder="含稅總額">
-                            </div>
-                        </div>
-
-                        <button onclick="generatePlanDoc()" class="w-full mt-auto bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:-translate-y-0.5 mt-2">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            生成計畫書
-                        </button>
+                    <div class="flex-1 overflow-y-auto p-8 bg-slate-50" id="editorContainer">
                     </div>
                 </div>
             </div>
@@ -820,7 +743,6 @@
         </footer>
     </main>
 
-    <!-- Helper Modal -->
     <div class="helper-btn" onclick="showHelperModal()">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
     </div>
@@ -839,7 +761,7 @@
                 <p>3. 系統即時計算得分，並可生成 Word 申請書。</p>
                 <div class="bg-slate-100 p-3 rounded-lg mt-4 text-left">
                     <p class="font-bold text-slate-700 mb-1">📢 演示新功能：</p>
-                    <p>點擊上方導覽列的 <span class="font-bold text-emerald-600">「紙本對照模式」</span>，即可開啟左側工作台，上傳照片進行對照輸入。</p>
+                    <p>點擊上方導覽列的 <span class="font-bold text-emerald-600">「照片工作台」</span>，即可開啟左側照片工作台，上傳照片預覽或拖曳。</p>
                 </div>
             </div>
             <button onclick="document.getElementById('helperModal').classList.add('hidden')" class="w-full mt-8 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition">我知道了！</button>
@@ -886,7 +808,6 @@
                 }
             });
             
-            // Auto-save
             const dataToSave = {
                 households, age,
                 checkboxStates: Array.from(document.querySelectorAll('input[type="checkbox"]')).map(cb => cb.checked),
@@ -895,8 +816,7 @@
                     if(sel) acc[name] = sel.value;
                     return acc;
                 }, {}),
-                cert_name: document.getElementById('cert_name').value,
-                plan_budget: document.getElementById('plan_budget').value
+                plan_budget: document.getElementById('plan_budget') ? document.getElementById('plan_budget').value : ''
             };
             localStorage.setItem('tanji_data', JSON.stringify(dataToSave));
 
@@ -946,8 +866,7 @@
                     const data = JSON.parse(e.target.result);
                     document.getElementById('households').value = data.households || '';
                     document.getElementById('age').value = data.age || '';
-                    document.getElementById('cert_name').value = data.cert_name || '';
-                    document.getElementById('plan_budget').value = data.plan_budget || '';
+                    if(document.getElementById('plan_budget')) document.getElementById('plan_budget').value = data.plan_budget || '';
 
                     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
                     if(data.checkboxStates) data.checkboxStates.forEach((st, idx) => { if(allCheckboxes[idx]) allCheckboxes[idx].checked = st; });
@@ -987,68 +906,6 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        window.onload = function() {
-            const saved = localStorage.getItem('tanji_data');
-            if(saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    document.getElementById('households').value = data.households || '';
-                    document.getElementById('age').value = data.age || '';
-                    document.getElementById('cert_name').value = data.cert_name || '';
-                    document.getElementById('plan_budget').value = data.plan_budget || '';
-                    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-                    if(data.checkboxStates) data.checkboxStates.forEach((st, idx) => { if(allCheckboxes[idx]) allCheckboxes[idx].checked = st; });
-                    calculateScore(); 
-                } catch(e) {}
-            }
-        }
-
-        function generateCertDoc() {
-            const name = document.getElementById('cert_name').value;
-            if(!name) { alert("請填寫名稱"); return; }
-            const households = document.getElementById('households').value || "未填寫";
-            const grade = document.querySelector('input[name="cert_grade"]:checked').value;
-            const score = document.getElementById('totalScore').innerText;
-            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType } = docx;
-            const doc = new Document({ sections: [{ children: [
-                new Paragraph({ text: "新北市低碳社區標章認證申請表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
-                new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: [
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("申請單位")] }), new TableCell({ children: [new Paragraph(name)] }) ]}),
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("戶數")] }), new TableCell({ children: [new Paragraph(households + " 戶")] }) ]}),
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("申請等級")] }), new TableCell({ children: [new Paragraph(grade)] }) ]}),
-                    new TableRow({ children: [ new TableCell({ children: [new Paragraph("自評總分")] }), new TableCell({ children: [new Paragraph(score + " 分")] }) ]}),
-                ]}),
-                new Paragraph({ text: "\n※ 由碳吉系統自動生成。", color: "888888" })
-            ]}]});
-            Packer.toBlob(doc).then(blob => saveAs(blob, `${name}_標章申請表.docx`));
-        }
-
-        function generatePlanDoc() {
-            const name = document.getElementById('cert_name').value || "未命名社區"; 
-            const typeSelect = document.getElementById('plan_type');
-            const typeText = typeSelect.options[typeSelect.selectedIndex].text;
-            const percentage = parseInt(typeSelect.value) / 100;
-            const total = parseInt(document.getElementById('plan_budget').value) || 0;
-            
-            const subsidy = Math.floor(total * percentage);
-            const self = total - subsidy;
-            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType } = docx;
-            const doc = new Document({ sections: [{ children: [
-                new Paragraph({ text: "新北市低碳社區改造補助計畫申請表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
-                new Paragraph({ text: `1. 申請單位：${name}` }), 
-                new Paragraph({ text: `2. 改造項目：${typeText}\n` }),
-                new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: [
-                    new TableRow({ children: [new TableCell({ children: [new Paragraph("項目")] }), new TableCell({ children: [new Paragraph("金額")] })] }),
-                    new TableRow({ children: [new TableCell({ children: [new Paragraph("預計總經費")] }), new TableCell({ children: [new Paragraph(total.toLocaleString() + " 元")] })] }),
-                    new TableRow({ children: [new TableCell({ children: [new Paragraph("申請補助")] }), new TableCell({ children: [new Paragraph(subsidy.toLocaleString() + " 元")] })] }),
-                    new TableRow({ children: [new TableCell({ children: [new Paragraph("自籌金額")] }), new TableCell({ children: [new Paragraph(self.toLocaleString() + " 元")] })] }),
-                ]}),
-                new Paragraph({ text: "\n※ 由碳吉系統自動生成。", color: "888888" })
-            ]}]});
-            Packer.toBlob(doc).then(blob => saveAs(blob, `${name}_改造計畫書.docx`));
-        }
-
-        // --- Comparison Mode Logic ---
         let images = [];
         let currentImageIndex = 0;
         let scale = 1;
@@ -1059,7 +916,6 @@
         function toggleCompareMode() {
             document.body.classList.toggle('compare-mode');
             if(document.body.classList.contains('compare-mode')) {
-                // Auto scroll to assessment if toggled on
                 setTimeout(() => {
                     document.getElementById('assessment').scrollIntoView({behavior: 'smooth'});
                 }, 300);
@@ -1070,22 +926,33 @@
             const files = input.files;
             if (!files.length) return;
 
-            // Append new images to the list
             for (let i = 0; i < files.length; i++) {
-                images.push(URL.createObjectURL(files[i]));
+                const url = URL.createObjectURL(files[i]);
+                images.push(url);
+                addToSidebarGallery(url);
             }
 
-            // If this was the first upload, show the first image
             if (images.length === files.length) {
                 currentImageIndex = 0;
                 renderImage();
-            } else {
-                // Update counter even if not switching image
-                updateCounter();
-            }
-            
-            // Clear input so same files can be selected again if needed (though we just appended)
+            } 
             input.value = '';
+        }
+
+        function addToSidebarGallery(url) {
+            const div = document.createElement('div');
+            div.className = 'bg-slate-800 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
+            div.innerHTML = `<img src="${url}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
+            div.onclick = () => selectSidebarImage(url);
+            document.getElementById('sidebarGallery').prepend(div);
+        }
+
+        function selectSidebarImage(url) {
+            const index = images.indexOf(url);
+            if (index !== -1) {
+                currentImageIndex = index;
+                renderImage();
+            }
         }
 
         function renderImage() {
@@ -1095,30 +962,9 @@
             if (images.length > 0) {
                 imgEl.src = images[currentImageIndex];
                 imgEl.classList.remove('hidden');
-                imgEl.style.display = 'block'; // Make sure display is block when loaded
+                imgEl.style.display = 'block'; 
                 emptyState.classList.add('hidden');
-                updateCounter();
-                resetZoom(); // Reset zoom on new image load
-            }
-        }
-
-        function updateCounter() {
-            document.getElementById('imgCounter').innerText = `${currentImageIndex + 1} / ${images.length}`;
-            document.getElementById('prevBtn').disabled = currentImageIndex === 0;
-            document.getElementById('nextBtn').disabled = currentImageIndex === images.length - 1;
-        }
-
-        function nextImage() {
-            if (currentImageIndex < images.length - 1) {
-                currentImageIndex++;
-                renderImage();
-            }
-        }
-
-        function prevImage() {
-            if (currentImageIndex > 0) {
-                currentImageIndex--;
-                renderImage();
+                resetZoom(); 
             }
         }
 
@@ -1142,7 +988,7 @@
         }
 
         function startDrag(e) {
-            e.preventDefault(); // Prevent default image dragging
+            e.preventDefault(); 
             if (images.length === 0) return;
             isDragging = true;
             startX = e.clientX - translateX;
@@ -1150,7 +996,7 @@
             document.getElementById('imageViewer').style.cursor = 'grabbing';
         }
 
-        function drag(e) {
+        function dragImage(e) {
             if (!isDragging) return;
             e.preventDefault();
             translateX = e.clientX - startX;
@@ -1167,12 +1013,534 @@
             const img = document.getElementById('currentImage');
             if(img) {
                 img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-                // Update zoom percentage text
                 const zoomText = document.getElementById('zoomDisplay');
                 if(zoomText) {
                     zoomText.innerText = Math.round(scale * 100) + '%';
                 }
             }
+        }
+
+        const categories = [
+            {
+                title: "生物多樣性 (6)",
+                items: ["原生種植栽(1)", "多層次植栽(1)", "生態景觀池(1)", "生態邊坡(1)", "環境教育解說牌(1)", "管理維護情形(1)"],
+                styleColor: "emerald"
+            },
+            {
+                title: "綠化量 (10)",
+                items: ["訂定規約開放屋頂(1)", "設立參與式屋頂農園或花園(1)", "綠屋頂面積>70m²或>20%(1)", "綠牆綠廊(2)", "綠覆率>15%(1)或>30%(2)", "綠化解說牌(1)", "綠化維護現況(2)"],
+                styleColor: "emerald"
+            },
+            {
+                title: "日常節能 (33)",
+                items: ["使用隔熱貼紙(1)", "設置外遮陽(1)", "公共照明節能(1~3)", "常開指示燈節能(1~3)", "紅外線感應(1)", "空調系統合理使用(1)", "空調系統使用現況(2)", "電梯自動關閉(1)", "尖峰排風(1)", "電梯與排風管理(2)", "ESPC或類似模式(2)", "節能設施環教牌(1)", "數位電錶管理(2)", "日常節能維護(2)"],
+                styleColor: "emerald"
+            },
+             {
+                title: "水資源 (11)",
+                items: ["節能E好宅(1~10)", "使用省水器材(1)", "管線漏水檢測(1)", "雨水利用(1~2)", "雨水管線配置(2)", "雨水利用辦法(1)", "雜用水管線(2)", "雜用水辦法(1)", "水資源回收解說牌(1)"],
+                styleColor: "emerald"
+            },
+             {
+                title: "再生能源 (8)",
+                items: ["再生能源評估/設置(1~3)", "熱泵/太陽熱水器(2)", "再生能源解說牌(1)", "發電裝置維護紀錄(2)"],
+                styleColor: "amber"
+            },
+            {
+                title: "垃圾源頭減量 (5)",
+                items: ["不使用免洗餐具(1)", "推廣惜食生活(1)", "以租代買(1)", "統計資料庫揭露(2)"],
+                styleColor: "sky"
+            },
+             {
+                title: "資源回收 (9)",
+                items: ["設立資源回收區(1)", "資源回收分類(3)", "廚餘妥善收運(1)", "回收宣導海報(1)", "資源回收現況(3)"],
+                styleColor: "sky"
+            },
+            {
+                title: "再利用 (9)",
+                items: ["二手物交換(2)", "落葉堆肥(2)", "廚餘堆肥(2)", "廢食用油回收(1)", "家具修繕(1)", "資源循環解說牌(1)"],
+                styleColor: "sky"
+            },
+             {
+                title: "大眾運輸 (2)",
+                items: ["宣導活動及海報(1)", "友善步行空間(1)"],
+                styleColor: "violet"
+            },
+            {
+                title: "共乘 (2)",
+                items: ["設立共乘辦法(1)", "張貼共乘海報(1)"],
+                styleColor: "violet"
+            },
+            {
+                title: "自行車 (5)",
+                items: ["自行車停車區(1)", "自行車架/租借(1)", "綠色交通解說牌(1)", "自行車使用現況(1)"],
+                styleColor: "violet"
+            },
+            {
+                title: "電動運具 (11)",
+                items: ["電動機車停車/充電(1)", "電動機車持有率(1~2)", "推廣活動海報(1)", "電動汽車推廣(1)", "電動汽車充電設施(1)", "電動汽車停車區(1)", "電動汽車持有率(1~2)", "電動運具解說牌(1)", "電動運具使用現況(1)"],
+                styleColor: "violet"
+            },
+             {
+                title: "永續生活實踐 (10)",
+                items: ["省水宣導(1)", "用水降低(1)", "省電宣導(1)", "用電降低(1)", "綠色競賽(1)", "推廣節電省水活動(1~2)", "參訪與觀摩(2)"],
+                styleColor: "orange"
+            },
+            {
+                title: "管理團隊 (6)",
+                items: ["無紙化推廣(1)", "3個月開會討論(2)", "小組成員研習(1~4)"],
+                styleColor: "orange"
+            },
+             {
+                title: "綠色消費 (6)",
+                items: ["綠色團購機制(1)", "採購綠色商品(2)", "團購金額額度(1~3)"],
+                styleColor: "orange"
+            },
+             {
+                title: "低碳飲食 (3)",
+                items: ["張貼宣導海報(1)", "辦理活動及紀錄(2)"],
+                styleColor: "orange"
+            },
+             {
+                title: "空氣品質 (4)",
+                items: ["辦理宣導活動(1)", "公共區域示範(1)", "紙錢減燒(1)", "金紙統一收取(1)"],
+                styleColor: "orange"
+            },
+            {
+                title: "創新作為 (10)",
+                items: ["具在地特色低碳作為(10)"],
+                styleColor: "rose"
+            }
+        ];
+
+        function initEditor() {
+            const container = document.getElementById('editorContainer');
+            let html = '';
+            
+            categories.forEach((cat, catIndex) => {
+                const colorMap = {
+                    'emerald': 'bg-emerald-500 border-emerald-100',
+                    'amber': 'bg-amber-400 border-amber-100',
+                    'sky': 'bg-sky-500 border-sky-100',
+                    'violet': 'bg-violet-500 border-violet-100',
+                    'orange': 'bg-orange-500 border-orange-100',
+                    'rose': 'bg-rose-500 border-rose-100'
+                };
+                
+                const titleBg = colorMap[cat.styleColor] || 'bg-emerald-500 border-emerald-100';
+                
+                html += `
+                <details class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow group/details overflow-hidden mb-6" ${catIndex === 0 ? 'open' : ''}>
+                    <summary class="flex items-center justify-between p-4 cursor-pointer select-none bg-slate-50 border-b border-slate-100">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-sm font-bold text-sm ${titleBg.split(' ')[0]}">${catIndex + 1}</div>
+                            <h3 class="text-lg font-bold text-slate-700">${cat.title}</h3>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-6 space-y-6">
+                `;
+                
+                cat.items.forEach((item, itemIndex) => {
+                    html += `
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden item-card" 
+                         data-cat-title="${cat.title}" 
+                         data-item-name="${item}" 
+                         data-is-first="${itemIndex === 0}" 
+                         data-row-span="${cat.items.length}">
+                        <div class="bg-slate-50 p-3 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                            <h4 class="font-bold text-slate-700 text-base">${item}</h4>
+                            <select onchange="changeState(this)" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-1.5">
+                                <option value="exist" selected>🟢 已有成果</option>
+                                <option value="plan">🔵 擬改造</option>
+                                <option value="none">⚪ 不適合</option>
+                            </select>
+                        </div>
+                        
+                        <div class="p-4 content-area">
+                            <div class="state-exist grid grid-cols-3 gap-3 mb-3">
+                                <div class="col-span-3 grid grid-cols-3 gap-3">
+                                    ${generatePhotoBox('遠景')}
+                                    ${generatePhotoBox('一般')}
+                                    ${generatePhotoBox('特寫')}
+                                </div>
+                            </div>
+
+                            <div class="state-plan hidden mb-3">
+                                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
+                                    <h5 class="text-blue-800 text-sm font-bold mb-2">擬改造示意圖</h5>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        ${generatePhotoBox('示意圖')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="state-none hidden mb-3">
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-500 text-sm">
+                                    <span class="font-bold">提示：</span> 免附照片，請說明原因。
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1 description-label">現況描述 (必填)</label>
+                                <textarea class="w-full border-slate-300 rounded-lg p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500 shadow-sm" rows="2" placeholder="請輸入說明..."></textarea>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                
+                html += `</div></details>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function generatePhotoBox(label) {
+            return `
+            <div class="drop-zone border-2 border-dashed border-slate-300 rounded-lg p-2 text-center flex flex-col items-center justify-center min-h-[120px] relative bg-slate-50 overflow-hidden cursor-pointer"
+                    ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="drop(event)" onclick="triggerFileInput(this)">
+                <input type="file" class="hidden" accept="image/*" onchange="handleDirectUpload(this)">
+                <div class="empty-state pointer-events-none">
+                    <span class="text-xs text-slate-500 block">拖曳或點擊</span>
+                    <span class="text-[10px] text-slate-400 block mt-1">(${label})</span>
+                </div>
+                <img class="preview-img hidden w-full h-full object-cover absolute inset-0 z-10 pointer-events-none">
+                <button onclick="clearImage(event, this)" class="hidden absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 z-20 hover:bg-red-600 shadow-md transform scale-75"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>`;
+        }
+
+        function triggerFileInput(div) {
+            const input = div.querySelector('input[type="file"]');
+            input.click();
+        }
+
+        function handleDirectUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = input.parentElement;
+                    const img = container.querySelector('.preview-img');
+                    const empty = container.querySelector('.empty-state');
+                    const btn = container.querySelector('button');
+                    
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    if(empty) empty.classList.add('hidden');
+                    if(btn) btn.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            input.value = ''; // Reset
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.src);
+            ev.dataTransfer.effectAllowed = "copy";
+        }
+        function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+        function leaveDrop(ev) { ev.currentTarget.classList.remove('drag-over'); }
+        function drop(ev) {
+            ev.preventDefault();
+            const container = ev.currentTarget;
+            container.classList.remove('drag-over');
+            const src = ev.dataTransfer.getData("text");
+            if (src) {
+                const img = container.querySelector('.preview-img');
+                const empty = container.querySelector('.empty-state');
+                const btn = container.querySelector('button');
+                
+                img.src = src;
+                img.classList.remove('hidden');
+                if(empty) empty.classList.add('hidden');
+                if(btn) btn.classList.remove('hidden');
+            }
+        }
+        function clearImage(event, btn) {
+            event.stopPropagation(); // 阻止觸發 container 的 onclick
+            const container = btn.parentElement;
+            const img = container.querySelector('.preview-img');
+            const empty = container.querySelector('.empty-state');
+            img.src = ''; img.classList.add('hidden'); btn.classList.add('hidden');
+            if(empty) empty.classList.remove('hidden');
+        }
+        function changeState(select) {
+            const card = select.closest('.item-card');
+            const state = select.value;
+            const exist = card.querySelector('.state-exist');
+            const plan = card.querySelector('.state-plan');
+            const none = card.querySelector('.state-none');
+            const label = card.querySelector('.description-label');
+            
+            exist.classList.add('hidden'); plan.classList.add('hidden'); none.classList.add('hidden');
+            
+            if (state === 'exist') { exist.classList.remove('hidden'); label.innerText = '現況描述 (必填)'; label.classList.remove('text-red-600'); }
+            else if (state === 'plan') { plan.classList.remove('hidden'); label.innerText = '擬改造內容描述 (必填)'; label.classList.remove('text-red-600'); }
+            else { none.classList.remove('hidden'); label.innerText = '不適用說明 (必填)'; label.classList.add('text-red-600'); }
+        }
+        function handleSidebarUpload(input) {
+            if(input.files && input.files.length > 0) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'bg-slate-700 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
+                        div.onclick = () => selectSidebarImage(e.target.result);
+                        document.getElementById('sidebarGallery').prepend(div);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        function selectSidebarImage(url) {
+            // Find index or just push to images if not found (though reader.onload is redundant if we use blob urls, but here we use base64 for sidebar to be consistent with main upload)
+            // But wait, handleImageUpload uses createObjectURL which is blob.
+            // Let's stick to blob for sidebar to avoid huge memory usage with base64 strings if possible, 
+            // BUT for drag and drop to work seamlessly with our unified buffer function, we need to handle both.
+            
+            // If the url is base64 (from the new reader.onload above), we can just display it.
+            // If it's a blob url (from handleImageUpload), we display it too.
+            const imgEl = document.getElementById('currentImage');
+            const emptyState = document.getElementById('emptyState');
+            
+            imgEl.src = url;
+            imgEl.classList.remove('hidden');
+            imgEl.style.display = 'block'; 
+            emptyState.classList.add('hidden');
+            
+            // Also update currentImageIndex if it's in the images array
+            const idx = images.indexOf(url);
+            if(idx !== -1) currentImageIndex = idx;
+            
+            resetZoom();
+        }
+
+        async function getImageBuffer(src) {
+            if (!src) return null;
+            
+            // Case 1: Base64
+            if (src.startsWith('data:')) {
+                const base64Regex = /^data:image\/(png|jpg|jpeg|svg\+xml);base64,/;
+                if (!base64Regex.test(src)) return null;
+                const stringBase64 = src.replace(base64Regex, "");
+                let binaryString;
+                try {
+                    binaryString = window.atob(stringBase64);
+                } catch (e) {
+                    console.error("Base64 decode failed", e);
+                    return null;
+                }
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+                return bytes.buffer;
+            } 
+            // Case 2: Blob URL or HTTP URL
+            else if (src.startsWith('blob:') || src.startsWith('http')) {
+                try {
+                    const response = await fetch(src);
+                    return await response.arrayBuffer();
+                } catch (e) {
+                    console.error("Fetch failed for image source", e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        async function generateWord() {
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, VerticalAlign, TextRun, ImageRun, PageOrientation, AlignmentType, BorderStyle, TableLayoutType } = docx;
+
+            const rows = [];
+            
+            rows.push(new TableRow({
+                children: [
+                    new TableCell({ children: [new Paragraph({ text: "項目", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ 
+                        children: [
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } },
+                                rows: [
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({ children: [new Paragraph({ text: "社區\n現況", bold: true, alignment: AlignmentType.CENTER })], width: { size: 10, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                                            new TableCell({ 
+                                                children: [
+                                                    new Paragraph({ text: "1.已有成果則插入3張圖片(不同位置、角度)佐證並描述現況。", size: 18 }),
+                                                    new Paragraph({ text: "2.未有成果欲於計畫中提出者，可插入擬改造的示意圖後，描述擬改造的內容。", size: 18 }),
+                                                    new Paragraph({ text: "3.社區現況不適合該項目，則免於提供佐證，但需提出說明。", size: 18 }),
+                                                ], 
+                                                width: { size: 90, type: WidthType.PERCENTAGE },
+                                                verticalAlign: VerticalAlign.CENTER
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        ], 
+                        width: { size: 45, type: WidthType.PERCENTAGE }, 
+                        rowSpan: 2, 
+                        verticalAlign: VerticalAlign.CENTER 
+                    }),
+                    new TableCell({ children: [new Paragraph({ text: "文字敘述", bold: true, alignment: AlignmentType.CENTER })], width: { size: 25, type: WidthType.PERCENTAGE }, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [new Paragraph({ text: "得分", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                ]
+            }));
+
+            rows.push(new TableRow({
+                children: [
+                    new TableCell({ children: [new Paragraph({ text: "自評", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [new Paragraph({ text: "初審", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                ]
+            }));
+
+            const cards = document.querySelectorAll('.item-card');
+            
+            for (let card of cards) {
+                const catTitle = card.dataset.catTitle;
+                const itemName = card.dataset.itemName;
+                const isFirst = card.dataset.isFirst === "true";
+                const rowSpanCount = parseInt(card.dataset.rowSpan);
+                const state = card.querySelector('select').value;
+                const descText = card.querySelector('textarea').value || (state === 'none' ? "本社區無此設施/不適用。" : "");
+                
+                let scoreText = ""; 
+                if (state === 'none') {
+                    scoreText = "0";
+                } 
+
+                const cells = [];
+
+                if (isFirst) {
+                    cells.push(new TableCell({ 
+                        children: [new Paragraph({ text: catTitle, alignment: AlignmentType.CENTER })], 
+                        verticalAlign: VerticalAlign.CENTER,
+                        rowSpan: rowSpanCount,
+                        width: { size: 5, type: WidthType.PERCENTAGE }
+                    }));
+                }
+
+                cells.push(new TableCell({ 
+                    children: [new Paragraph({ text: itemName })], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 10, type: WidthType.PERCENTAGE }
+                }));
+
+                let photoContent;
+                if (state !== 'none') {
+                    const selector = state === 'exist' ? '.state-exist img.preview-img' : '.state-plan img.preview-img';
+                    const imgs = card.querySelectorAll(selector);
+                    const photoCells = [];
+                    
+                    for(let i=0; i<3; i++) {
+                        let cellContent = [];
+                        if(imgs[i] && imgs[i].src && !imgs[i].classList.contains('hidden')) {
+                            // Now we use the robust getImageBuffer which handles both base64 and blobs
+                            const buffer = await getImageBuffer(imgs[i].src);
+                            if(buffer) {
+                                cellContent.push(new Paragraph({
+                                    children: [new ImageRun({
+                                        data: buffer,
+                                        transformation: { width: 100, height: 75 },
+                                    })],
+                                    alignment: AlignmentType.CENTER
+                                }));
+                            }
+                        } else {
+                            cellContent.push(new Paragraph(""));
+                        }
+                        
+                        photoCells.push(new TableCell({
+                            children: cellContent,
+                            verticalAlign: VerticalAlign.CENTER,
+                            width: { size: 33, type: WidthType.PERCENTAGE },
+                            borders: { 
+                                top: { style: BorderStyle.NONE }, 
+                                bottom: { style: BorderStyle.NONE }, 
+                                left: { style: BorderStyle.NONE }, 
+                                right: { style: BorderStyle.NONE },
+                                insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" }
+                            }
+                        }));
+                    }
+                    
+                    photoContent = [new Table({
+                        rows: [new TableRow({ children: photoCells })],
+                        width: { size: 100, type: WidthType.PERCENTAGE },
+                        borders: { 
+                            top: { style: BorderStyle.NONE }, 
+                            bottom: { style: BorderStyle.NONE }, 
+                            left: { style: BorderStyle.NONE }, 
+                            right: { style: BorderStyle.NONE },
+                            insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } 
+                        }
+                    })];
+                } else {
+                    photoContent = [new Paragraph({ text: "不適用", alignment: AlignmentType.CENTER, color: "888888" })];
+                }
+
+                cells.push(new TableCell({
+                    children: photoContent,
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 45, type: WidthType.PERCENTAGE }
+                }));
+
+                cells.push(new TableCell({ 
+                    children: [new Paragraph(descText)], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 25, type: WidthType.PERCENTAGE }
+                }));
+
+                cells.push(new TableCell({ 
+                    children: [new Paragraph({ text: scoreText, alignment: AlignmentType.CENTER })], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 7.5, type: WidthType.PERCENTAGE }
+                }));
+
+                cells.push(new TableCell({ children: [], verticalAlign: VerticalAlign.CENTER, width: { size: 7.5, type: WidthType.PERCENTAGE } }));
+
+                rows.push(new TableRow({ children: cells }));
+            }
+
+            const doc = new Document({
+                sections: [{
+                    properties: { page: { size: { orientation: PageOrientation.LANDSCAPE } } },
+                    children: [
+                        new Paragraph({ text: "表四、社區現況佐證表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 200 }, bold: true, color: "000000" }),
+                        new Table({
+                            layout: TableLayoutType.FIXED,
+                            width: { size: 100, type: WidthType.PERCENTAGE },
+                            rows: rows
+                        }),
+                        new Paragraph({ 
+                            text: "改造前：      分；改造後：      分", 
+                            alignment: AlignmentType.RIGHT,
+                            spacing: { before: 300 },
+                            size: 24
+                        })
+                    ],
+                }],
+            });
+
+            Packer.toBlob(doc).then(blob => saveAs(blob, "表四_社區現況佐證表_完整版.docx"));
+        }
+
+        window.onload = function() {
+            const saved = localStorage.getItem('tanji_data');
+            if(saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('households').value = data.households || '';
+                    document.getElementById('age').value = data.age || '';
+                    if(document.getElementById('plan_budget')) document.getElementById('plan_budget').value = data.plan_budget || '';
+
+                    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+                    if(data.checkboxStates) data.checkboxStates.forEach((st, idx) => { if(allCheckboxes[idx]) allCheckboxes[idx].checked = st; });
+                    calculateScore(); 
+                } catch(e) {}
+            }
+            initEditor(); 
         }
     </script>
 </body>
