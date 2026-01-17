@@ -259,7 +259,7 @@
                 <p class="text-slate-500 text-sm mb-6">這將會移除目前所有已填寫的資料與暫存紀錄，無法復原。</p>
                 <div class="flex gap-3">
                     <button onclick="document.getElementById('resetModal').classList.add('hidden')" class="flex-1 px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">取消</button>
-                    <button onclick="confirmReset()" class="flex-1 px-4 py-2 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition">確定清空</button>
+                    <button onclick="confirmReset()" class="flex-1 px-4 py-2 bg-rose-50 text-white rounded-xl font-bold hover:bg-rose-600 transition">確定清空</button>
                 </div>
             </div>
         </div>
@@ -375,7 +375,7 @@
                                     <div class="grid grid-cols-2 gap-3">
                                         <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">開放屋頂規約</span><span class="score-tag">1分</span></div></div></label>
                                         <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">屋頂農園/花園</span><span class="score-tag">1分</span></div></div></label>
-                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠屋頂>70m²或超過20%</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠屋頂>70m²或超過屋頂面積20%</span><span class="score-tag">1分</span></div></div></label>
                                         <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠牆/綠廊</span><span class="score-tag">2分</span></div></div></label>
                                         <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠化解說牌</span><span class="score-tag">1分</span></div></div></label>
                                         <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠化維護現況</span><span class="score-tag">2分</span></div></div></label>
@@ -738,7 +738,7 @@
             </div>
         </div>
 
-        <!-- NEW: 合作案例區塊 (使用玫瑰紅配色) -->
+        <!-- NEW: 合作案例區塊 (已置中、Logo放大、文字樣式調整) -->
         <section id="collaboration" class="py-20 bg-white border-t border-slate-200">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -747,27 +747,29 @@
                     <p class="mt-4 text-slate-500 max-w-2xl mx-auto text-lg">探索已導入碳吉系統的示範社區，見證綠色改造的實際成果。</p>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-8">
-                    <!-- 案例 1 -->
-                    <a href="https://tanji2026.github.io/wonderfulplace" target="_blank" class="w-full max-w-sm group block bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-emerald-300 transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="h-56 bg-white flex items-center justify-center p-4 relative overflow-hidden">
+                <!-- 使用 flex justify-center 將卡片置中 -->
+                <div class="flex justify-center">
+                    <!-- 案例 1：麗寶萊茵 -->
+                    <a href="https://tanji2026.github.io/wonderfulplace" target="_blank" class="w-full max-w-md group block bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 hover:shadow-2xl hover:border-emerald-300 transition-all duration-300 transform hover:-translate-y-1">
+                        <!-- 圖片容器高度增加為 h-64，padding 減少為 p-4 讓 Logo 更大 -->
+                        <div class="h-64 bg-white flex items-center justify-center p-4 relative overflow-hidden">
                             <!-- 裝飾背景 -->
                             <div class="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 opacity-50"></div>
-                            <!-- LOGO -->
-                            <img src="assets/logo/logo_header.png" alt="麗寶萊茵社區" class="w-full h-full object-contain relative z-10 group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x200?text=Community+Logo'">
+                            <!-- LOGO：設定為 w-full h-full object-contain 確保完整且最大化 -->
+                            <img src="assets/logo/logo_header.png" alt="麗寶萊茵社區" class="w-full h-full object-contain relative z-10 group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400?text=Community+Logo'">
                         </div>
-                        <div class="p-6">
-                            <div class="flex items-center justify-center mb-3">
-                                <h3 class="text-2xl font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
-                                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">麗寶萊茵</span>
+                        <div class="p-6 text-center">
+                            <div class="mb-4">
+                                <h3 class="text-3xl font-black text-slate-800">
+                                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">麗寶萊茵</span> 社區
                                 </h3>
                             </div>
-                            <p class="text-slate-500 text-sm mb-4 line-clamp-2">
+                            <p class="text-slate-500 text-base mb-6 leading-relaxed">
                                 運用數位工具盤點社區生態與節能設施，打造與自然共生的永續生活環境。
                             </p>
-                            <div class="flex items-center text-emerald-600 font-bold text-sm group-hover:underline">
+                            <div class="inline-flex items-center justify-center px-6 py-2 bg-emerald-600 text-white rounded-full font-bold text-sm group-hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-100">
                                 <span>瀏覽案例社區官網</span>
-                                <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                             </div>
                         </div>
                     </a>
@@ -1071,7 +1073,7 @@
             },
             {
                 title: "3. 日常節能 (33)",
-                items: ["使用隔熱貼紙(1)", "設置外遮陽(1)", "公共照明≥50%(1)、≥70%(2)、≥90%(3)、", "常開指示燈≥50%(1)、≥70%(2)、≥90%(3)", "紅外線感應(1)", "空調系統合理使用(1)", "空調系統使用現況(2)", "電梯在無人乘坐會自動關閉(1)", "尖峰排風(1)", "電梯與排風管理使用現況(2)", "ESPC或類似模式(2)", "節能設施環境教育解說牌(1)", "採用數位電錶管理公共區域用電(2)", "日常節能管理維護現況(2)","節能E好宅已報名(1)、核定三星級(4)、核定四星級(6)、核定五星級(8)、核定六星級(10)"],
+                items: ["使用隔熱貼紙(1)", "設置外遮陽(1)", "公共照明≥50%(1)、≥70%(2)、≥90%(3)", "常開指示燈≥50%(1)、≥70%(2)、≥90%(3)", "紅外線感應(1)", "空調系統合理使用(1)", "空調系統使用現況(2)", "電梯在無人乘坐會自動關閉(1)", "尖峰排風(1)", "電梯與排風管理使用現況(2)", "ESPC或類似模式(2)", "節能設施環境教育解說牌(1)", "採用數位電錶管理公共區域用電(2)", "日常節能管理維護現況(2)","節能E好宅已報名(1)、核定三星級(4)、核定四星級(6)、核定五星級(8)、核定六星級(10)"],
                 styleColor: "emerald"
             },
              {
@@ -1198,9 +1200,9 @@
                         <div class="p-4 content-area">
                             <div class="state-exist grid grid-cols-3 gap-3 mb-3">
                                 <div class="col-span-3 grid grid-cols-3 gap-3">
-                                    ${generatePhotoBox('遠景')}
-                                    ${generatePhotoBox('一般')}
-                                    ${generatePhotoBox('特寫')}
+                                    ${generatePhotoBox}
+                                    ${generatePhotoBox}
+                                    ${generatePhotoBox}
                                 </div>
                             </div>
 
