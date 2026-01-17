@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>麗寶萊茵 | 社區數位生態導覽</title>
-    <!-- 引入 Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- 引入 Tailwind CSS -->
+    <meta name="robots" content="noindex,nofollow">
+    <title>碳吉 TanJi - 低碳社區標章認證</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -16,572 +17,1530 @@
                         sans: ['Noto Sans TC', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            light: '#E0F2FE', 
-                            DEFAULT: '#0EA5E9', 
-                            dark: '#0369A1',   
-                        }
-                    },
-                    scrollMargin: {
-                        'header': '90px', 
+                        emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b' },
+                        amber: { 50: '#fffbeb', 100: '#fef3c7', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309', 900: '#78350f' },
+                        sky: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+                        violet: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 700: '#6d28d9', 900: '#4c1d95' },
+                        orange: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 700: '#c2410c', 900: '#7c2d12' },
+                        rose: { 50: '#fff1f2', 100: '#ffe4e6', 500: '#f43f5e', 700: '#be123c', 900: '#881337' },
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' },
                     }
                 }
             }
         }
     </script>
-    <style>
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+    <style type="text/tailwindcss">
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
-        .section-title {
-            position: relative;
-            display: inline-block;
-        }
-        /* 已移除藍色底線樣式 */
-        section {
-            scroll-margin-top: 100px;
-        }
-        /* 圖片容器樣式，確保比例一致 */
-        .img-container {
-            height: 160px;
+        
+        .sr-only-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
             overflow: hidden;
-            position: relative;
-            background-color: #e2e8f0; /* 預設灰底 */
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
         }
-        .img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none !important;
+          margin: 0 !important;
         }
-        .group:hover .img-container img {
-            transform: scale(1.05);
+        input[type=number] {
+          -moz-appearance: textfield !important;
         }
+
+        .checkbox-box, .radio-box {
+            background-color: white;
+            border: 2px solid #cbd5e1;
+        }
+        .checkbox-icon, .radio-dot {
+            display: none;
+        }
+
+        input[type="checkbox"]:checked + .card-content .checkbox-box { 
+            background-color: currentColor; 
+            border-color: currentColor; 
+        }
+        input[type="checkbox"]:checked + .card-content .checkbox-icon { 
+            display: block !important; 
+            stroke: white !important; 
+            stroke-width: 3 !important; 
+        }
+
+        input[type="radio"]:checked + .card-content .checkbox-box,
+        input[type="radio"]:checked + .card-content .radio-box { 
+            background-color: white; 
+            border-color: currentColor;    
+        }
+        input[type="radio"]:checked + .card-content .radio-dot { 
+            display: block !important; 
+            background-color: currentColor;
+        }
+
+        .group-emerald { color: #10b981; } 
+        .group-emerald:hover { background-color: #ecfdf5; border-color: #6ee7b7; }
+        .group-emerald:has(input:checked) { background-color: #ecfdf5; border-color: #10b981; }
+        .group-emerald input:checked + .card-content .text-label { color: #064e3b; font-weight: 700; }
+        .group-emerald input:checked + .card-content .score-tag { background-color: #d1fae5; color: #064e3b; }
+
+        .group-amber { color: #f59e0b; }
+        .group-amber:hover { background-color: #fffbeb; border-color: #fcd34d; }
+        .group-amber:has(input:checked) { background-color: #fffbeb; border-color: #f59e0b; }
+        .group-amber input:checked + .card-content .text-label { color: #78350f; font-weight: 700; }
+        .group-amber input:checked + .card-content .score-tag { background-color: #fef3c7; color: #78350f; }
+
+        .group-sky { color: #0ea5e9; }
+        .group-sky:hover { background-color: #f0f9ff; border-color: #7dd3fc; }
+        .group-sky:has(input:checked) { background-color: #f0f9ff; border-color: #0ea5e9; }
+        .group-sky input:checked + .card-content .text-label { color: #0c4a6e; font-weight: 700; }
+        .group-sky input:checked + .card-content .score-tag { background-color: #e0f2fe; color: #0c4a6e; }
+
+        .group-violet { color: #8b5cf6; }
+        .group-violet:hover { background-color: #f5f3ff; border-color: #a78bfa; }
+        .group-violet:has(input:checked) { background-color: #f5f3ff; border-color: #8b5cf6; }
+        .group-violet input:checked + .card-content .text-label { color: #4c1d95; font-weight: 700; }
+        .group-violet input:checked + .card-content .score-tag { background-color: #ede9fe; color: #4c1d95; }
+
+        .group-orange { color: #f97316; }
+        .group-orange:hover { background-color: #fff7ed; border-color: #fdba74; }
+        .group-orange:has(input:checked) { background-color: #fff7ed; border-color: #f97316; }
+        .group-orange input:checked + .card-content .text-label { color: #7c2d12; font-weight: 700; }
+        .group-orange input:checked + .card-content .score-tag { background-color: #ffedd5; color: #7c2d12; }
+
+        .group-rose { color: #f43f5e; }
+        .group-rose:hover { background-color: #fff1f2; border-color: #fda4af; }
+        .group-rose:has(input:checked) { background-color: #fff1f2; border-color: #f43f5e; }
+        .group-rose input:checked + .card-content .text-label { color: #881337; font-weight: 700; }
+        .group-rose input:checked + .card-content .score-tag { background-color: #ffe4e6; color: #881337; }
+
+        .option-card {
+            @apply relative flex items-start p-3 rounded-xl border border-slate-200 cursor-pointer transition-all duration-150 bg-white select-none h-full;
+        }
+        .card-content {
+            @apply flex items-center w-full;
+        }
+        .checkbox-box, .radio-box {
+            @apply w-5 h-5 flex-shrink-0 mr-3 flex items-center justify-center rounded;
+        }
+        .radio-box { @apply rounded-full; }
+        
+        .checkbox-icon { @apply w-3.5 h-3.5; }
+        .radio-dot { @apply w-2.5 h-2.5 rounded-full; }
+        
+        .text-label {
+            @apply text-slate-600 text-base leading-snug transition-colors;
+        }
+        .score-tag {
+            @apply ml-2 text-xs font-bold px-2 py-1 rounded bg-slate-100 text-slate-500 whitespace-nowrap;
+        }
+        
+        .helper-btn {
+            @apply fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full shadow-xl flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform z-50 hover:shadow-2xl border-2 border-white/20;
+        }
+        .helper-tooltip {
+            @apply absolute bottom-16 right-0 w-64 bg-white p-4 rounded-xl shadow-xl border border-gray-100 opacity-0 transform translate-y-2 pointer-events-none transition-all duration-300;
+        }
+        .helper-btn:hover .helper-tooltip, .helper-btn:focus .helper-tooltip {
+            @apply opacity-100 translate-y-0 pointer-events-auto;
+        }
+
+        .toast {
+            @apply fixed top-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg z-[100] transition-all duration-300 opacity-0 -translate-y-full flex items-center;
+        }
+        .toast.show {
+            @apply opacity-100 translate-y-0;
+        }
+
+        details summary::-webkit-details-marker { display: none; }
+        details summary { list-style: none; }
+        details .triangle-icon { @apply transition-transform duration-200 transform; }
+        details[open] .triangle-icon { @apply rotate-180; }
+
+        body.compare-mode #comparison-sidebar {
+            transform: translateX(0);
+        }
+        body.compare-mode #main-content {
+            margin-left: 50%;
+            width: 50%;
+        }
+        #comparison-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        #main-content {
+            transition: all 0.3s ease-in-out;
+        }
+        .image-viewer-container {
+            cursor: grab;
+        }
+        .image-viewer-container:active {
+            cursor: grabbing;
+        }
+        
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
+
+        .drop-zone { transition: all 0.2s; border: 2px dashed #cbd5e1; }
+        .drop-zone.drag-over { border-color: #10b981; background-color: #ecfdf5; transform: scale(1.02); }
+        .draggable-source { cursor: grab; }
+        .draggable-source:active { cursor: grabbing; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 antialiased selection:bg-brand-light selection:text-brand-dark">
+<body class="bg-slate-50 text-slate-700 selection:bg-emerald-100 selection:text-emerald-800 relative overflow-x-hidden">
 
-    <!-- 導覽列 -->
-    <nav class="fixed top-0 w-full glass-nav z-50 transition-all duration-300">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                
-                <!-- 左側：麗寶萊茵 LOGO -->
-                <div class="flex-shrink-0 cursor-pointer flex items-center gap-3" onclick="window.scrollTo(0,0)">
-                    <!-- 請上傳 assets/logo/logo_header.png -->
-                    <img src="assets/logo/logo_header.png" alt="麗寶萊茵" class="h-10 md:h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <!-- 圖片讀取失敗時的替代文字 -->
-                    <div class="hidden text-left">
-                        <h1 class="text-lg font-bold text-slate-800">麗寶萊茵</h1>
-                        <p class="text-[10px] text-brand tracking-widest uppercase">Wonderful Place</p>
-                    </div>
-                </div>
-
-                <!-- 右側：選單 -->
-                <div class="flex items-center gap-4">
-                    <!-- 電腦版選單 -->
-                    <div class="hidden md:flex space-x-8">
-                        <a href="#plants" class="text-slate-600 hover:text-brand font-medium transition">生態綠化</a>
-                        <a href="#energy" class="text-slate-600 hover:text-brand font-medium transition">日常節能</a>
-                        <a href="#green-life" class="text-slate-600 hover:text-brand font-medium transition">永續生活</a>
-                        <a href="#future" class="text-slate-600 hover:text-brand font-medium transition">未來願景</a>
-                    </div>
-
-                    <!-- 手機版選單按鈕 -->
-                    <div class="flex md:hidden">
-                        <button onclick="toggleMenu()" class="text-slate-500 hover:text-brand focus:outline-none p-2">
-                            <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+    <div id="comparison-sidebar" class="fixed top-16 left-0 w-1/2 h-[calc(100vh-4rem)] bg-slate-900 z-40 border-r border-slate-700 flex flex-col transform -translate-x-full shadow-2xl">
+        <div class="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center text-white">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <h3 class="font-bold text-lg">照片工作台</h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center shadow-lg border border-white/10">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    匯入照片
+                    <input type="file" id="paperUpload" multiple accept="image/*" class="hidden" onchange="handleImageUpload(this)">
+                </label>
+                <button onclick="toggleCompareMode()" class="text-slate-400 hover:text-white p-1" title="關閉對照模式">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
         </div>
         
-        <!-- 手機版下拉選單 -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full shadow-lg">
-            <div class="px-4 pt-2 pb-4 space-y-1">
-                <a href="#plants" onclick="toggleMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50">🌱 生態綠化</a>
-                <a href="#energy" onclick="toggleMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50">⚡ 日常節能</a>
-                <a href="#green-life" onclick="toggleMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50">♻️ 永續生活</a>
-                <a href="#future" onclick="toggleMenu()" class="block px-3 py-3 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50">🚀 未來願景</a>
+        <div class="flex-grow flex flex-col p-4 space-y-4 overflow-y-auto">
+            <div id="imageViewer" class="relative bg-slate-800 rounded-xl overflow-hidden border border-slate-700 min-h-[300px] flex items-center justify-center image-viewer-container" onmousedown="startDrag(event)" onmousemove="dragImage(event)" onmouseup="endDrag()" onmouseleave="endDrag()" onwheel="zoomImage(event)">
+                <div id="emptyState" class="text-center text-slate-500 pointer-events-none">
+                    <p class="text-lg font-medium">預覽區域</p>
+                    <p class="text-sm opacity-70">點擊下方列表切換</p>
+                </div>
+                <img id="currentImage" class="max-w-none origin-center hidden" style="transform: translate(0px, 0px) scale(1);">
             </div>
-        </div>
-    </nav>
 
-    <!-- Hero 區域 -->
-    <div class="pt-32 pb-12 px-4 text-center bg-gradient-to-b from-blue-50 to-white">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl md:text-5xl font-black text-slate-800 mb-6 leading-tight">
-                探索 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">麗寶萊茵</span> 的永續生活
-            </h2>
-            <p class="text-slate-500 text-lg mb-8 leading-relaxed">
-                我們致力於打造與自然共生的居住環境。<br>
-                掃描園區內的 QR Code，認識身邊的綠色設施與植物朋友。
-            </p>
-            <div class="flex justify-center gap-4">
-                <a href="#plants" class="px-8 py-3 bg-brand text-white rounded-full font-bold shadow-lg shadow-blue-200 hover:bg-blue-600 transition transform hover:-translate-y-1">開始導覽</a>
+            <div class="flex justify-between items-center text-white bg-slate-800 p-2 rounded-lg border border-slate-700">
+                <div class="flex gap-2">
+                    <button onclick="adjustZoom(-0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
+                    <span id="zoomDisplay" class="text-sm w-12 text-center pt-1">100%</span>
+                    <button onclick="adjustZoom(0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
+                </div>
+                <div class="text-xs text-slate-400">滾輪縮放 / 拖曳移動</div>
+            </div>
+
+            <div class="text-white text-sm font-bold border-b border-slate-700 pb-2">照片列表 (可拖曳至右側表格)</div>
+            <div id="sidebarGallery" class="space-y-4 pb-12">
             </div>
         </div>
     </div>
 
-    <main class="max-w-6xl mx-auto px-4 pb-24 space-y-24">
-        
-        <!-- ================= 1. 生態綠化區 (6種植物) ================= -->
-        <section id="plants">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="p-2 bg-green-100 rounded-lg text-green-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold section-title">生態綠化</h3>
-            </div>
+    <div id="toast" class="toast">
+        <svg class="w-5 h-5 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toastMsg" class="font-medium">已成功匯入紀錄</span>
+    </div>
 
-            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <!-- 1. 桂花 -->
-                <div id="osmanthus" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/plants/osmanthus.jpg -->
-                        <img src="assets/plants/osmanthus.jpg" onerror="this.src='https://images.unsplash.com/photo-1598443905728-66a93910c598?auto=format&fit=crop&q=80&w=600'" alt="桂花">
-                        <span class="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-slate-700 shadow-sm">木犀科</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-xl font-bold text-slate-800">桂花</h4>
-                        <p class="text-xs text-slate-400 italic mb-2">Osmanthus fragrans</p>
-                        <p class="text-sm text-slate-600 mb-3">常綠灌木，花期極長。能吸附懸浮微粒，是天然的空氣清淨機。</p>
-                        <div class="bg-green-50 p-2 rounded text-xs text-green-700 font-medium">🌿 年固碳量約 1.2 kg</div>
-                    </div>
+    <div id="resetModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[70] backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all scale-100">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </div>
-
-                <!-- 2. 羅漢松 -->
-                <div id="podocarpus" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/plants/podocarpus.jpg -->
-                        <img src="assets/plants/podocarpus.jpg" onerror="this.src='https://images.unsplash.com/photo-1596726660601-52e85a420b91?auto=format&fit=crop&q=80&w=600'" alt="羅漢松">
-                        <span class="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-slate-700 shadow-sm">羅漢松科</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-xl font-bold text-slate-800">羅漢松</h4>
-                        <p class="text-xs text-slate-400 italic mb-2">Podocarpus macrophyllus</p>
-                        <p class="text-sm text-slate-600 mb-3">樹形優美且抗風性強，在社區擔任防風林角色，有助調節微氣候。</p>
-                        <div class="bg-green-50 p-2 rounded text-xs text-green-700 font-medium">🌿 年固碳量約 18.5 kg</div>
-                    </div>
-                </div>
-
-                <!-- 3. 變葉木 -->
-                <div id="croton" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/plants/croton.jpg -->
-                        <img src="assets/plants/croton.jpg" onerror="this.src='https://images.unsplash.com/photo-1614594975525-e45890e2e126?auto=format&fit=crop&q=80&w=600'" alt="變葉木">
-                        <span class="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-slate-700 shadow-sm">大戟科</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-xl font-bold text-slate-800">變葉木</h4>
-                        <p class="text-xs text-slate-400 italic mb-2">Codiaeum variegatum</p>
-                        <p class="text-sm text-slate-600 mb-3">葉色豐富多變，具極佳的滯塵能力，能有效過濾空氣中的灰塵。</p>
-                        <div class="bg-green-50 p-2 rounded text-xs text-green-700 font-medium">🌿 優異滯塵與淨化能力</div>
-                    </div>
-                </div>
-
-                <!-- 4. 七里香 -->
-                <div id="murraya" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/plants/murraya.jpg -->
-                        <img src="assets/plants/murraya.jpg" onerror="this.src='https://images.unsplash.com/photo-1596249767298-382903746654?auto=format&fit=crop&q=80&w=600'" alt="月橘 (七里香)">
-                        <span class="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-slate-700 shadow-sm">芸香科</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-xl font-bold text-slate-800">月橘 (七里香)</h4>
-                        <p class="text-xs text-slate-400 italic mb-2">Murraya paniculata</p>
-                        <p class="text-sm text-slate-600 mb-3">台灣原生種，花香濃郁，是良好的蜜源植物，能吸引蜜蜂蝴蝶。</p>
-                        <div class="bg-green-50 p-2 rounded text-xs text-green-700 font-medium">🌿 誘鳥誘蝶原生種</div>
-                    </div>
-                </div>
-
-                <!-- 5. 仙丹花 -->
-                <div id="ixora" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/plants/ixora.jpg -->
-                        <img src="assets/plants/ixora.jpg" onerror="this.src='https://images.unsplash.com/photo-1599598425947-320092261f9d?auto=format&fit=crop&q=80&w=600'" alt="仙丹花">
-                        <span class="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-slate-700 shadow-sm">茜草科</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-xl font-bold text-slate-800">仙丹花</h4>
-                        <p class="text-xs text-slate-400 italic mb-2">Ixora chinensis</p>
-                        <p class="text-sm text-slate-600 mb-3">花期長且花蜜豐富，為都市中重要的蜜源植物，有助生物多樣性。</p>
-                        <div class="bg-green-50 p-2 rounded text-xs text-green-700 font-medium">🌿 社區重要蜜源</div>
-                    </div>
-                </div>
-
-                <!-- 6. 虎尾蘭 -->
-                <div id="sansevieria" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/plants/sansevieria.jpg -->
-                        <img src="assets/plants/sansevieria.jpg" onerror="this.src='https://images.unsplash.com/photo-1599152277663-128292f7039f?auto=format&fit=crop&q=80&w=600'" alt="虎尾蘭">
-                        <span class="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-slate-700 shadow-sm">龍舌蘭科</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-xl font-bold text-slate-800">虎尾蘭</h4>
-                        <p class="text-xs text-slate-400 italic mb-2">Sansevieria trifasciata</p>
-                        <p class="text-sm text-slate-600 mb-3">CAM代謝植物，夜間也能吸收二氧化碳並釋放氧氣，淨化能力極強。</p>
-                        <div class="bg-green-50 p-2 rounded text-xs text-green-700 font-medium">🌿 負離子與夜間製氧</div>
-                    </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">確定要清空嗎？</h3>
+                <p class="text-slate-500 text-sm mb-6">這將會移除目前所有已填寫的資料與暫存紀錄，無法復原。</p>
+                <div class="flex gap-3">
+                    <button onclick="document.getElementById('resetModal').classList.add('hidden')" class="flex-1 px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">取消</button>
+                    <button onclick="confirmReset()" class="flex-1 px-4 py-2 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition">確定清空</button>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- ================= 2. 日常節能區 ================= -->
-        <section id="energy">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="p-2 bg-yellow-100 rounded-lg text-yellow-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-slate-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-400 to-green-600 rounded-xl shadow-lg text-white">
+                        <svg class="w-6 h-6 drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/></svg>
+                    </div>
+                    <span class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-teal-600 tracking-wide drop-shadow-sm">碳吉 TanJi</span>
                 </div>
-                <h3 class="text-2xl font-bold section-title">日常節能設備</h3>
-            </div>
-
-            <div class="grid gap-6 md:grid-cols-2">
-                <!-- 感應照明 -->
-                <div id="lighting" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/lighting.jpg -->
-                        <img src="assets/facilities/lighting.jpg" onerror="this.src='https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=600'" alt="感應照明">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">感應式照明系統</h4>
-                                <p class="text-xs text-slate-400">地下室 / 梯廳</p>
-                            </div>
-                            <div class="text-yellow-500 bg-yellow-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            採用雷達微波偵測。平時維持 20% 微亮，偵測到人車移動立即升至 100% 全亮，兼顧安全與節能。
-                        </p>
-                        <div class="bg-slate-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">節電效率</span>
-                            <span class="text-sm font-bold text-blue-600">65%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 節能電梯 -->
-                <div id="elevator" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/elevator.jpg -->
-                        <img src="assets/facilities/elevator.jpg" onerror="this.src='https://images.unsplash.com/photo-1546252928-39cb0df399c9?auto=format&fit=crop&q=80&w=600'" alt="節能電梯">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">電梯節能模式</h4>
-                                <p class="text-xs text-slate-400">公共設施</p>
-                            </div>
-                            <div class="text-blue-500 bg-blue-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            電梯採無人使用一段時間後，車廂內照明與風扇會自動關閉進入待機模式，減少非必要能耗。
-                        </p>
-                        <div class="bg-slate-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">智慧功能</span>
-                            <span class="text-sm font-bold text-blue-600">自動休眠待機</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 智慧電錶 -->
-                <div id="smart-meter" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/smart_meter.jpg -->
-                        <img src="assets/facilities/smart_meter.jpg" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600'" alt="智慧電錶">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">智慧電錶監測</h4>
-                                <p class="text-xs text-slate-400">能源管理</p>
-                            </div>
-                            <div class="text-purple-500 bg-purple-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            針對公設用電大戶設置智慧電錶，即時監測電力數據，協助管委會分析用電尖峰，優化契約容量與設備運轉時間。
-                        </p>
-                        <div class="bg-slate-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">管理效益</span>
-                            <span class="text-sm font-bold text-purple-600">用電可視化</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 公用冰箱 -->
-                <div id="fridge" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/fridge.jpg -->
-                        <img src="assets/facilities/fridge.jpg" onerror="this.src='https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?auto=format&fit=crop&q=80&w=600'" alt="節能電器">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">公用節能電器</h4>
-                                <p class="text-xs text-slate-400">交誼廳 / 管理室</p>
-                            </div>
-                            <div class="text-teal-500 bg-teal-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            公設區域全面採用具「能源效率第1級」標章之變頻冰箱與飲水機，24小時運轉仍保持極低耗能。
-                        </p>
-                        <div class="bg-slate-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">能效等級</span>
-                            <span class="text-sm font-bold text-teal-600">第 1 級 (最高)</span>
-                        </div>
-                    </div>
+                <div class="flex items-center space-x-6">
+                    <button onclick="toggleCompareMode()" class="flex items-center px-5 py-2.5 bg-emerald-700 text-white rounded-xl hover:bg-emerald-800 transition-all duration-200 font-bold shadow-lg border-2 border-emerald-600">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                        照片工作台
+                    </button>
+                    <a href="#assessment" class="text-slate-500 hover:text-emerald-600 font-medium transition text-sm md:text-base">低碳自評</a>
+                    <a href="#documents" class="text-slate-500 hover:text-emerald-600 font-medium transition text-sm md:text-base">佐證編輯器</a>
                 </div>
             </div>
-        </section>
+        </div>
+    </nav>
 
-        <!-- ================= 3. 永續生活區 ================= -->
-        <section id="green-life">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="p-2 bg-sky-100 rounded-lg text-sky-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold section-title">永續生活設施</h3>
+    <main id="main-content" class="w-full transition-all duration-300">
+        <div class="hero-bg h-[55vh] flex items-center justify-center text-center px-4 pt-16 relative overflow-hidden">
+            <div class="text-white max-w-4xl z-10">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight drop-shadow-lg leading-tight">
+                    低碳改造，讓社區 <span class="text-emerald-400 inline-block">碳吉</span>
+                </h1>
+                <p class="text-lg md:text-2xl mb-10 opacity-90 font-light leading-relaxed max-w-3xl mx-auto">
+                    協助社區申請 115 年度新北市<span class="font-bold text-white mx-1">低碳社區標章認證</span>與<span class="font-bold text-white mx-1">低碳社區改造補助</span>
+                </p>
             </div>
+        </div>
 
-            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <!-- 省水設備 -->
-                <div id="water-saving" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/water_saving.jpg -->
-                        <img src="assets/facilities/water_saving.jpg" onerror="this.src='https://images.unsplash.com/photo-1585909692308-9e87515b4c41?auto=format&fit=crop&q=80&w=600'" alt="省水設備">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">省水標章設備</h4>
-                                <p class="text-xs text-slate-400">水資源管理</p>
-                            </div>
-                            <div class="text-sky-500 bg-sky-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            公設區域之水龍頭、馬桶及淋浴設備，全面採用具「省水標章」認證之產品，在不影響使用體驗下大幅減少用水量。
-                        </p>
-                        <div class="bg-sky-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">認證</span>
-                            <span class="text-sm font-bold text-sky-700">省水標章</span>
-                        </div>
-                    </div>
+        <div id="assessment" class="py-20 relative">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <span class="text-emerald-600 font-bold tracking-widest uppercase text-xs bg-emerald-100 px-3 py-1 rounded-full mb-3 inline-block">STEP 1</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800">115年 社區基本資料與自評</h2>
+                    <p class="mt-4 text-slate-500 max-w-2xl mx-auto text-lg">系統將依據 115 年度預估指標細項，自動計算落點與補助資格。</p>
                 </div>
 
-                <!-- 簡易雨水回收 (NEW) -->
-                <div id="rainwater" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/rainwater.jpg -->
-                        <img src="assets/facilities/rainwater.jpg" onerror="this.src='https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=600'" alt="雨水回收">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">簡易雨水回收</h4>
-                                <p class="text-xs text-slate-400">水資源利用</p>
-                            </div>
-                            <div class="text-blue-500 bg-blue-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            設置專用雨水貯留桶，簡單有效地收集天然雨水。收集後的水資源可用於庭園澆灌或清洗公設，減少自來水耗用。
-                        </p>
-                        <div class="bg-blue-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">用途</span>
-                            <span class="text-sm font-bold text-blue-700">澆灌與清洗</span>
-                        </div>
-                    </div>
+                <div class="flex flex-wrap justify-center gap-4 mb-12">
+                    <button onclick="saveData()" class="flex items-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-emerald-600 transition shadow-sm font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                        儲存進度 (下載)
+                    </button>
+                    <button onclick="document.getElementById('importFile').click()" class="flex items-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-emerald-600 transition shadow-sm font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        匯入紀錄
+                    </button>
+                    <input type="file" id="importFile" class="hidden" accept=".json" onchange="loadData(this)">
+                    
+                    <button onclick="triggerReset()" class="flex items-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition shadow-sm font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        清空重填
+                    </button>
                 </div>
 
-                <!-- 電動車友善 -->
-                <div id="ev-charging" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/ev_charging.jpg -->
-                        <img src="assets/facilities/ev_charging.jpg" onerror="this.src='https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=600'" alt="電動車友善">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
+                <form id="calcForm" class="space-y-12">
+                    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                        <div class="bg-slate-50 px-8 py-4 border-b border-slate-200 flex items-center">
+                            <svg class="w-5 h-5 text-slate-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <h3 class="text-lg font-bold text-slate-700">基本資料填寫</h3>
+                        </div>
+                        <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
-                                <h4 class="text-xl font-bold text-slate-800">電動車友善預留</h4>
-                                <p class="text-xs text-slate-400">低碳交通</p>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">社區總戶數</label>
+                                <div class="relative group">
+                                    <input type="number" id="households" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：150" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">戶</span>
+                                </div>
                             </div>
-                            <div class="text-green-500 bg-green-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            本社區於地下停車場已預先建置電動車充電線路管道，保有未來擴充彈性。住戶未來安裝充電樁時無須再次大規模施工。
-                        </p>
-                        <div class="bg-green-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">狀態</span>
-                            <span class="text-sm font-bold text-green-700">管線已預留</span>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">屋齡</label>
+                                <div class="relative group">
+                                    <input type="number" id="age" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：10" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">年</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 資源回收 -->
-                <div id="recycling" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/recycling.jpg -->
-                        <img src="assets/facilities/recycling.jpg" onerror="this.src='https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=600'" alt="資源回收">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">資源回收與分類</h4>
-                                <p class="text-xs text-slate-400">資源循環</p>
-                            </div>
-                            <div class="text-orange-500 bg-orange-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            落實細緻化垃圾分類，設置明確標示的回收桶。鼓勵住戶將紙類、塑膠、金屬、玻璃等資源有效循環，源頭減量。
-                        </p>
-                        <div class="bg-orange-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">目標</span>
-                            <span class="text-sm font-bold text-orange-700">源頭減量</span>
-                        </div>
-                    </div>
-                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <!-- 自評項目保持原樣 -->
+                        <details class="bg-white rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition-shadow group/details overflow-hidden" open>
+                            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md font-bold text-lg bg-emerald-500">I</div>
+                                    <h3 class="text-2xl font-bold text-emerald-800">綠建築 (60分)</h3>
+                                </div>
+                                <svg class="w-6 h-6 text-emerald-500 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </summary>
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="border-t border-emerald-50 pt-4">
+                                    <h4 class="text-emerald-700 font-bold mb-3 text-sm uppercase tracking-wider">1. 生物多樣性 (6分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">原生種植栽</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">多層次植栽</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">生態景觀池</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">生態邊坡</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">環境教育牌</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">管理維護</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-t border-emerald-50 pt-4">
+                                    <h4 class="text-emerald-700 font-bold mb-3 text-sm uppercase tracking-wider">2. 綠化量 (10分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">開放屋頂規約</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">屋頂農園/花園</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠屋頂>70m²或超過20%</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠牆/綠廊</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠化解說牌</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠化維護現況</span><span class="score-tag">2分</span></div></div></label>
+                                        <div class="col-span-2 bg-emerald-50/50 p-2 rounded-xl border border-emerald-100">
+                                            <p class="text-xs text-emerald-700 font-bold mb-2 px-1">綠覆率 (擇一)</p>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <label class="option-card group-emerald"><input type="radio" name="green_coverage" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 15%</span><span class="score-tag">1分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="green_coverage" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 30%</span><span class="score-tag">2分</span></div></div></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <!-- 落葉/廚餘堆肥 -->
-                <div id="compost" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/compost.jpg -->
-                        <img src="assets/facilities/compost.jpg" onerror="this.src='https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&q=80&w=600'" alt="堆肥">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">自主堆肥區</h4>
-                                <p class="text-xs text-slate-400">廢棄物再生</p>
-                            </div>
-                            <div class="text-amber-500 bg-amber-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-                        </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            設置社區堆肥站，將庭園落葉與生廚餘回收，轉化為有機肥料回歸花園土壤，達成有機質循環零廢棄。
-                        </p>
-                        <div class="bg-amber-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">成效</span>
-                            <span class="text-sm font-bold text-amber-700">零廢棄循環</span>
-                        </div>
-                    </div>
-                </div>
+                                <div class="border-t border-emerald-50 pt-4">
+                                    <h4 class="text-emerald-700 font-bold mb-3 text-sm uppercase tracking-wider">3. 日常節能 (33分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">隔熱貼紙</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">設置外遮陽</span><span class="score-tag">1分</span></div></div></label>
+                                        
+                                        <div class="col-span-2 bg-emerald-50/50 p-2 rounded-xl border border-emerald-100">
+                                            <p class="text-xs text-emerald-700 font-bold mb-2 px-1">一般照明 (擇一)</p>
+                                            <div class="grid grid-cols-3 gap-2">
+                                                <label class="option-card group-emerald"><input type="radio" name="lighting_gen" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">>50%</span><span class="score-tag">1分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="lighting_gen" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">>70%</span><span class="score-tag">2分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="lighting_gen" value="3" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">>90%</span><span class="score-tag">3分</span></div></div></label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-span-2 bg-emerald-50/50 p-2 rounded-xl border border-emerald-100">
+                                            <p class="text-xs text-emerald-700 font-bold mb-2 px-1">指示燈 (擇一)</p>
+                                            <div class="grid grid-cols-3 gap-2">
+                                                <label class="option-card group-emerald"><input type="radio" name="lighting_exit" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">>50%</span><span class="score-tag">1分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="lighting_exit" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">>70%</span><span class="score-tag">2分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="lighting_exit" value="3" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">>90%</span><span class="score-tag">3分</span></div></div></label>
+                                            </div>
+                                        </div>
 
-                <!-- 幸福小站 -->
-                <div id="sharing" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 border border-slate-100 group">
-                    <div class="img-container">
-                        <!-- 請上傳 assets/facilities/sharing.jpg -->
-                        <img src="assets/facilities/sharing.jpg" onerror="this.src='https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=600'" alt="幸福小站">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-start justify-between mb-2">
-                            <div>
-                                <h4 class="text-xl font-bold text-slate-800">幸福小站</h4>
-                                <p class="text-xs text-slate-400">共享經濟</p>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">照明感應調控</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">空調合理使用</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">空調管理現況</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">電梯自動關閉</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">尖峰排風管理</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">電梯排風現況</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">績效保證合約</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">節能解說牌</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">智慧電錶管理</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">節能管理現況</span><span class="score-tag">2分</span></div></div></label>
+
+                                        <div class="col-span-2 bg-emerald-50/50 p-2 rounded-xl border border-emerald-100">
+                                            <div class="flex justify-between items-center mb-2 px-1">
+                                                <p class="text-xs text-emerald-700 font-bold">節能E好宅(擇一)</p>
+                                            </div>
+                                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                                <label class="option-card group-emerald"><input type="radio" name="e_home" value="4" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">已報名</span><span class="score-tag">1分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="e_home" value="4" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">三星級</span><span class="score-tag">4分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="e_home" value="6" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">四星級</span><span class="score-tag">6分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="e_home" value="8" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">五星級</span><span class="score-tag">8分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="e_home" value="10" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">六星級</span><span class="score-tag">10分</span></div></div></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-emerald-50 pt-4">
+                                    <h4 class="text-emerald-700 font-bold mb-3 text-sm uppercase tracking-wider">4. 水資源 (11分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">省水器材</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">管線檢漏</span><span class="score-tag">1分</span></div></div></label>
+                                        
+                                        <div class="col-span-2 bg-emerald-50/50 p-2 rounded-xl border border-emerald-100">
+                                            <p class="text-xs text-emerald-700 font-bold mb-2 px-1">雨水利用 (擇一)</p>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <label class="option-card group-emerald"><input type="radio" name="rainwater" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">0.5-1噸</span><span class="score-tag">1分</span></div></div></label>
+                                                <label class="option-card group-emerald"><input type="radio" name="rainwater" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 1噸</span><span class="score-tag">2分</span></div></div></label>
+                                            </div>
+                                        </div>
+
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">雨水管線配置</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">雨水使用辦法</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">雜用水管線</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">雜用水辦法</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-emerald"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">水資源解說牌</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-pink-500 bg-pink-50 p-1.5 rounded-full"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+                        </details>
+                        <!-- (其他分類項目，以此類推，這裡省略以保持簡潔，實際部署時應包含所有指標) -->
+                        <details class="bg-white rounded-2xl shadow-sm border border-amber-100 hover:shadow-md transition-shadow group/details overflow-hidden">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md font-bold text-lg bg-amber-400">II</div>
+                                    <h3 class="text-2xl font-bold text-amber-800">綠色能源 (8分)</h3>
+                                </div>
+                                <svg class="w-6 h-6 text-amber-500 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </summary>
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="border-t border-amber-50 pt-4">
+                                    <h4 class="text-amber-700 font-bold mb-3 text-sm uppercase tracking-wider">5. 應用再生能源 (8分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="col-span-2 grid grid-cols-3 gap-3 bg-amber-50/50 p-2 rounded-xl border border-amber-100"><p class="col-span-3 text-xs text-amber-700 font-bold px-1">再生能源裝置 (擇一)</p>
+                                            <label class="option-card group-amber"><input type="radio" name="renew_energy" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">評估未設</span><span class="score-tag">1分</span></div></div></label>
+                                            <label class="option-card group-amber"><input type="radio" name="renew_energy" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">&lt; 2kW</span><span class="score-tag">2分</span></div></div></label>
+                                            <label class="option-card group-amber"><input type="radio" name="renew_energy" value="3" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">&gt; 2kW</span><span class="score-tag">3分</span></div></div></label>
+                                        </div>
+                                        <label class="option-card group-amber"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">熱泵/太陽熱水</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-amber"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠能解說牌</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-amber"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">維護管理紀錄</span><span class="score-tag">2分</span></div></div></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="bg-white rounded-2xl shadow-sm border border-sky-100 hover:shadow-md transition-shadow group/details overflow-hidden">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md font-bold text-lg bg-sky-500">III</div>
+                                    <h3 class="text-2xl font-bold text-sky-800">資源循環 (23分)</h3>
+                                </div>
+                                <svg class="w-6 h-6 text-sky-500 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </summary>
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="border-t border-sky-50 pt-4">
+                                    <h4 class="text-sky-700 font-bold mb-3 text-sm uppercase tracking-wider">6. 垃圾源頭減量 (5分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">不提供免洗餐具</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">推廣惜食</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">以租代買</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">垃圾減量統計</span><span class="score-tag">2分</span></div></div></label>
+                                    </div>
+                                </div>
+                                <div class="border-t border-sky-50 pt-4">
+                                    <h4 class="text-sky-700 font-bold mb-3 text-sm uppercase tracking-wider">7. 資源回收分類 (9分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">回收區整潔</span><span class="score-tag">1分</span></div></div></label>
+                                        <div class="col-span-2 grid grid-cols-3 gap-3 bg-sky-50/50 p-2 rounded-xl border border-sky-100"><p class="col-span-3 text-xs text-sky-700 font-bold px-1">回收分類 (擇一)</p>
+                                            <label class="option-card group-sky"><input type="radio" name="recycle_type" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">4類+</span><span class="score-tag">1分</span></div></div></label>
+                                            <label class="option-card group-sky"><input type="radio" name="recycle_type" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">6類+</span><span class="score-tag">2分</span></div></div></label>
+                                            <label class="option-card group-sky"><input type="radio" name="recycle_type" value="3" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">8類+</span><span class="score-tag">3分</span></div></div></label>
+                                        </div>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">廚餘確實回收</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">回收宣導活動</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="3" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">回收變賣現況</span><span class="score-tag">3分</span></div></div></label>
+                                    </div>
+                                </div>
+                                <div class="border-t border-sky-50 pt-4">
+                                    <h4 class="text-sky-700 font-bold mb-3 text-sm uppercase tracking-wider">8. 再利用 (9分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">二手物交換</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">落葉堆肥</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">廚餘堆肥</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">廢食用油製皂</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">家具修繕再利用</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-sky"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">再利用解說牌</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="bg-white rounded-2xl shadow-sm border border-violet-100 hover:shadow-md transition-shadow group/details overflow-hidden">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md font-bold text-lg bg-violet-500">IV</div>
+                                    <h3 class="text-2xl font-bold text-violet-800">綠色交通 (20分)</h3>
+                                </div>
+                                <svg class="w-6 h-6 text-violet-500 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </summary>
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="border-t border-violet-50 pt-4">
+                                    <h4 class="text-violet-700 font-bold mb-3 text-sm uppercase tracking-wider">9. 大眾運輸/步行 (2分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">宣導活動</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">友善步行空間</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                                <div class="border-t border-violet-50 pt-4">
+                                    <h4 class="text-violet-700 font-bold mb-3 text-sm uppercase tracking-wider">10. 共乘 (2分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">共乘辦法</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">共乘海報</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                                <div class="border-t border-violet-50 pt-4">
+                                    <h4 class="text-violet-700 font-bold mb-3 text-sm uppercase tracking-wider">11. 自行車 (5分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">自行車停車區</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">自行車停車架</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">租借系統</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">交通解說牌</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">自行車使用現況</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                                <div class="border-t border-violet-50 pt-4">
+                                    <h4 class="text-violet-700 font-bold mb-3 text-sm uppercase tracking-wider">12. 電動運具 (11分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">機車充電區</span><span class="score-tag">1分</span></div></div></label>
+                                        <div class="col-span-2 grid grid-cols-2 gap-3 bg-violet-50/50 p-2 rounded-xl border border-violet-100"><p class="col-span-2 text-xs text-violet-700 font-bold px-1">電動機車持有 (擇一)</p>
+                                            <label class="option-card group-violet"><input type="radio" name="ev_scooter" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">&lt; 5%</span><span class="score-tag">1分</span></div></div></label>
+                                            <label class="option-card group-violet"><input type="radio" name="ev_scooter" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">5% 以上</span><span class="score-tag">2分</span></div></div></label>
+                                        </div>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">機車宣導</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">汽車推廣</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">住戶充電樁</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">公共充電區</span><span class="score-tag">1分</span></div></div></label>
+                                        <div class="col-span-2 grid grid-cols-2 gap-3 bg-violet-50/50 p-2 rounded-xl border border-violet-100"><p class="col-span-2 text-xs text-violet-700 font-bold px-1">電動汽車持有 (擇一)</p>
+                                            <label class="option-card group-violet"><input type="radio" name="ev_car" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">&lt; 1%</span><span class="score-tag">1分</span></div></div></label>
+                                            <label class="option-card group-violet"><input type="radio" name="ev_car" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">1% 以上</span><span class="score-tag">2分</span></div></div></label>
+                                        </div>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">電動運具解說牌</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-violet"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">電動運具現況</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="bg-white rounded-2xl shadow-sm border border-orange-100 hover:shadow-md transition-shadow group/details overflow-hidden">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md font-bold text-lg bg-orange-500">V</div>
+                                    <h3 class="text-2xl font-bold text-orange-800">永續生活環境 (29分)</h3>
+                                </div>
+                                <svg class="w-6 h-6 text-orange-500 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </summary>
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="border-t border-orange-50 pt-4">
+                                    <h4 class="text-orange-700 font-bold mb-3 text-sm uppercase tracking-wider">13. 永續生活實踐 (10分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">省水宣導</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">省水成效>10%</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">省電宣導</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">省電成效>10%</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">參與綠色競賽</span><span class="score-tag">1分</span></div></div></label>
+                                        <div class="col-span-2 grid grid-cols-2 gap-3 bg-orange-50/50 p-2 rounded-xl border border-orange-100"><p class="col-span-2 text-xs text-orange-700 font-bold px-1">推廣E好宅 (擇一)</p>
+                                            <label class="option-card group-orange"><input type="radio" name="promote_ehome" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">1 處</span><span class="score-tag">1分</span></div></div></label>
+                                            <label class="option-card group-orange"><input type="radio" name="promote_ehome" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">2 處</span><span class="score-tag">2分</span></div></div></label>
+                                        </div>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">社區參訪觀摩</span><span class="score-tag">2分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">無紙化推廣</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                                <div class="border-t border-orange-50 pt-4">
+                                    <h4 class="text-orange-700 font-bold mb-3 text-sm uppercase tracking-wider">14. 管理團隊 (6分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">推動小組運作</span><span class="score-tag">2分</span></div></div></label>
+                                        <div class="col-span-2 grid grid-cols-2 gap-3 bg-orange-50/50 p-2 rounded-xl border border-orange-100"><p class="col-span-2 text-xs text-orange-700 font-bold px-1">小組研習時數 (擇一)</p>
+                                            <label class="option-card group-orange"><input type="radio" name="training" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 12hr</span><span class="score-tag">1分</span></div></div></label>
+                                            <label class="option-card group-orange"><input type="radio" name="training" value="4" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 36hr</span><span class="score-tag">4分</span></div></div></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-t border-orange-50 pt-4">
+                                    <h4 class="text-orange-700 font-bold mb-3 text-sm uppercase tracking-wider">15. 綠色消費 (6分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">綠色團購機制</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">採購綠色商品</span><span class="score-tag">2分</span></div></div></label>
+                                        <div class="col-span-2 grid grid-cols-3 gap-3 bg-orange-50/50 p-2 rounded-xl border border-orange-100"><p class="col-span-3 text-xs text-orange-700 font-bold px-1">綠色採購額度 (擇一)</p>
+                                            <label class="option-card group-orange"><input type="radio" name="green_buy" value="1" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 2萬</span><span class="score-tag">1分</span></div></div></label>
+                                            <label class="option-card group-orange"><input type="radio" name="green_buy" value="2" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 5萬</span><span class="score-tag">2分</span></div></div></label>
+                                            <label class="option-card group-orange"><input type="radio" name="green_buy" value="3" class="sr-only-input" onclick="toggleRadio(this)"><div class="card-content"><div class="radio-box"><div class="radio-dot"></div></div><div class="flex-grow flex justify-between"><span class="text-label">> 10萬</span><span class="score-tag">3分</span></div></div></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-t border-orange-50 pt-4">
+                                    <h4 class="text-orange-700 font-bold mb-3 text-sm uppercase tracking-wider">16. 低碳飲食 (3分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">飲食宣導</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="2" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">低碳飲食現況</span><span class="score-tag">2分</span></div></div></label>
+                                    </div>
+                                </div>
+                                <div class="border-t border-orange-50 pt-4">
+                                    <h4 class="text-orange-700 font-bold mb-3 text-sm uppercase tracking-wider">17. 空氣品質 (4分)</h4>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">空品宣導</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">具體改善措施</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">金紙減燒</span><span class="score-tag">1分</span></div></div></label>
+                                        <label class="option-card group-orange"><input type="checkbox" name="indicators" value="1" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">紙錢集中燒</span><span class="score-tag">1分</span></div></div></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="bg-white rounded-2xl shadow-sm border border-rose-100 hover:shadow-md transition-shadow group/details overflow-hidden">
+                            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md font-bold text-lg bg-rose-500">VI</div>
+                                    <h3 class="text-2xl font-bold text-rose-800">創新作為 (10分)</h3>
+                                </div>
+                                <svg class="w-6 h-6 text-rose-500 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </summary>
+                            <div class="p-6 pt-0 space-y-6">
+                                <div class="border-t border-rose-50 pt-4">
+                                    <div class="grid grid-cols-1 gap-3">
+                                        <label class="option-card group-rose"><input type="checkbox" name="indicators" value="10" class="sr-only-input" onchange="calculateScore()"><div class="card-content"><div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div><div class="flex-grow flex justify-between"><span class="text-label">創新或在地特色作為 (自行舉證)</span><span class="score-tag">10分</span></div></div></label>
+                                        <p class="text-sm text-slate-500 mt-2 px-2">包含：參與示範活動、低碳經濟(有機農業/旅遊)、環境教育走廊、再生能源創意應用等。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </form>
+
+                <div id="resultArea" class="hidden mt-16 bg-white rounded-3xl shadow-xl overflow-hidden border border-emerald-100 relative">
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-center">
+                        <h3 class="text-2xl font-bold text-white tracking-wide">碳吉診斷報告</h3>
+                    </div>
+                    <div class="p-8 md:p-10">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                            <div class="py-4">
+                                <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">預估總得分</p>
+                                <p id="totalScore" class="text-6xl font-black text-emerald-600">0</p>
+                                <div id="badgeLevel" class="text-base font-bold text-slate-500 mt-3 bg-slate-100 inline-block px-4 py-1.5 rounded-full">尚未達標</div>
+                            </div>
+                            <div class="py-4">
+                                <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">標章獎金</p>
+                                <p id="rewardMoney" class="text-4xl font-extrabold text-slate-800">NT$ 0</p>
+                                <p class="text-xs text-rose-500 mt-3 font-bold bg-rose-50 inline-block px-3 py-1 rounded-full">3/13 截止</p>
+                            </div>
+                            <div class="py-4">
+                                <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">改造補助上限</p>
+                                <p id="subsidyMoney" class="text-4xl font-extrabold text-slate-800">NT$ 0</p>
+                                <p class="text-xs text-blue-500 mt-3 font-bold bg-blue-50 inline-block px-3 py-1 rounded-full">4/15、6/15、8/14 截止</p>
+                            </div>
                         </div>
-                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
-                            設置「幸福小站」二手物資交換區，住戶可將閒置的書籍、玩具整理後分享給需要的鄰居，延長物品生命週期。
-                        </p>
-                        <div class="bg-pink-50 px-4 py-2 rounded-lg flex justify-between items-center">
-                            <span class="text-xs font-bold text-slate-500">推廣</span>
-                            <span class="text-sm font-bold text-pink-600">書籍玩具交換</span>
+                        <div class="mt-10 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                            <h4 class="font-bold text-blue-800 mb-3 text-lg flex items-center">
+                                <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                規劃師建議：
+                            </h4>
+                            <ul id="suggestionList" class="list-disc list-inside text-blue-900 space-y-2 text-base font-medium">
+                                <li>請先輸入資料進行診斷。</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- ================= 4. 未來改造願景 (NEW) ================= -->
-        <section id="future">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="p-2 bg-indigo-100 rounded-lg text-indigo-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
+        <div id="documents" class="py-24 bg-slate-50 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <span class="text-emerald-600 font-bold tracking-widest uppercase text-xs bg-emerald-100 px-3 py-1 rounded-full">STEP 2</span>
+                    <h2 class="text-3xl font-bold text-slate-800 mt-4">表四佐證資料編輯器</h2>
+                    <p class="mt-3 text-slate-500">一鍵產生符合 115 年度規範的正式申請書 (.docx)</p>
                 </div>
-                <h3 class="text-2xl font-bold section-title">未來改造願景</h3>
-            </div>
 
-            <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-indigo-100">
-                <!-- 大尺寸圖片區 -->
-                <div class="h-64 md:h-96 overflow-hidden relative bg-slate-200">
-                    <!-- 請上傳 assets/future/rooftop_design.jpg -->
-                    <img src="assets/future/rooftop_design.jpg" onerror="this.src='https://images.unsplash.com/photo-1592507671040-a3df426639c4?auto=format&fit=crop&q=80&w=1200'" alt="屋頂農園設計圖" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
-                        <div class="p-8 text-white">
-                            <span class="bg-indigo-600 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">Future Project</span>
-                            <h4 class="text-3xl font-bold mb-1">屋頂農園改造計畫</h4>
-                            <p class="text-indigo-100 text-sm">活化樓頂閒置平臺 · 打造可食地景</p>
+                <div class="w-full flex flex-col h-full bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                    <div class="bg-white p-4 border-b border-slate-200 shadow-sm flex justify-between items-center z-20">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">表四、社區現況佐證表</h2>
                         </div>
+                        <button onclick="generateWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-medium flex items-center transition">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            生成 Word 檔
+                        </button>
                     </div>
-                </div>
-                <div class="p-8">
-                    <p class="text-slate-600 leading-relaxed text-lg mb-6">
-                        我們計畫將樓頂閒置平臺轉型為生機盎然的「屋頂農園」。
-                        透過設置高架種植箱與休憩座椅，不僅能增加社區綠覆率、降低頂層室內溫度，更能成為住戶體驗農耕樂趣、分享收成的社交空間。
-                    </p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-indigo-50 p-4 rounded-xl text-center">
-                            <p class="text-indigo-600 font-bold mb-1">降溫隔熱</p>
-                            <p class="text-xs text-slate-500">調節微氣候</p>
-                        </div>
-                        <div class="bg-indigo-50 p-4 rounded-xl text-center">
-                            <p class="text-indigo-600 font-bold mb-1">食農教育</p>
-                            <p class="text-xs text-slate-500">親子共學場域</p>
-                        </div>
-                        <div class="bg-indigo-50 p-4 rounded-xl text-center">
-                            <p class="text-indigo-600 font-bold mb-1">社區交流</p>
-                            <p class="text-xs text-slate-500">共享收成喜悅</p>
-                        </div>
+
+                    <div class="flex-1 overflow-y-auto p-8 bg-slate-50" id="editorContainer">
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
+        <footer class="bg-slate-800 text-slate-400 py-12 text-center mt-12 border-t border-slate-700">
+            <p class="text-lg font-bold text-slate-200 mb-2">碳吉 TanJi - 2026 第六屆永續生活實驗室獎參賽作品</p>
+            <p class="text-sm opacity-60">本系統僅供輔助試算與文件草稿生成，實際規範請以環保局公告為準。</p>
+        </footer>
     </main>
 
-    <!-- 頁尾 -->
-    <footer class="bg-slate-900 text-white py-16">
-        <div class="max-w-5xl mx-auto px-4 text-center">
-            
-            <!-- 頁尾文字 LOGO -->
-            <div class="mb-8 flex justify-center">
-                <!-- 請上傳 assets/logo/logo_footer.png -->
-                <img src="assets/logo/logo_footer.png" alt="麗寶萊茵" class="h-12 md:h-16 w-auto opacity-90 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <!-- 圖片讀取失敗時的替代文字 -->
-                <div class="hidden">
-                    <span class="text-2xl font-bold tracking-widest text-white">麗寶萊茵</span>
+    <div class="helper-btn" onclick="showHelperModal()">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    </div>
+
+    <div id="helperModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[60] backdrop-blur-sm" onclick="this.classList.add('hidden')">
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl transform transition-all scale-100" onclick="event.stopPropagation()">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800">歡迎使用 碳吉</h3>
+            </div>
+            <div class="space-y-4 text-slate-600 text-sm">
+                <p>1. 填寫社區戶數與屋齡。</p>
+                <p>2. 展開下方指標項目並勾選現況。</p>
+                <p>3. 系統即時計算得分，並可生成 Word 申請書。</p>
+                <div class="bg-slate-100 p-3 rounded-lg mt-4 text-left">
+                    <p class="font-bold text-slate-700 mb-1">📢 演示新功能：</p>
+                    <p>點擊上方導覽列的 <span class="font-bold text-emerald-600">「照片工作台」</span>，即可開啟左側照片工作台，上傳照片預覽或拖曳。</p>
                 </div>
             </div>
-
-            <p class="text-slate-400 text-sm mb-2">低碳永續 · 友善環境 · 幸福宜居</p>
-            <p class="text-slate-600 text-xs">© 2026 麗寶萊茵管理委員會. All Rights Reserved.</p>
+            <button onclick="document.getElementById('helperModal').classList.add('hidden')" class="w-full mt-8 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition">我知道了！</button>
         </div>
-    </footer>
-
-    <!-- 回到頂部按鈕 -->
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 p-3 bg-white text-brand shadow-lg rounded-full border border-blue-100 hover:bg-blue-50 transition z-40" aria-label="Back to top">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-    </button>
+    </div>
 
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        function showHelperModal() {
+            document.getElementById('helperModal').classList.remove('hidden');
+            document.getElementById('helperModal').classList.add('flex');
+        }
+
+        const radioState = {};
+        function toggleRadio(element) {
+            if (radioState[element.name] === element) {
+                element.checked = false;
+                radioState[element.name] = null;
+                calculateScore();
+            } else {
+                radioState[element.name] = element;
+                calculateScore();
+            }
+        }
+
+        function calculateScore() {
+            const households = parseInt(document.getElementById('households').value) || 0;
+            const age = parseInt(document.getElementById('age').value) || 0;
+            
+            let score = 0;
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                score += parseInt(cb.value);
+            });
+
+            const radioGroups = [
+                'green_coverage', 'lighting_gen', 'lighting_exit', 'e_home', 
+                'rainwater', 'renew_energy', 'recycle_type', 'ev_scooter', 
+                'ev_car', 'training', 'green_buy', 'promote_ehome'
+            ];
+            
+            radioGroups.forEach(groupName => {
+                const selected = document.querySelector(`input[name="${groupName}"]:checked`);
+                if(selected) {
+                    score += parseInt(selected.value);
+                }
+            });
+            
+            const dataToSave = {
+                households, age,
+                checkboxStates: Array.from(document.querySelectorAll('input[type="checkbox"]')).map(cb => cb.checked),
+                radioStates: radioGroups.reduce((acc, name) => {
+                    const sel = document.querySelector(`input[name="${name}"]:checked`);
+                    if(sel) acc[name] = sel.value;
+                    return acc;
+                }, {}),
+                plan_budget: document.getElementById('plan_budget') ? document.getElementById('plan_budget').value : ''
+            };
+            localStorage.setItem('tanji_data', JSON.stringify(dataToSave));
+
+            let level = "尚未達標";
+            let levelClass = "text-slate-500 bg-slate-100";
+            let reward = 0;
+
+            if (score >= 100) { level = "白金級"; levelClass = "text-purple-600 bg-purple-100 ring-1 ring-purple-200"; reward = 100000; }
+            else if (score >= 80) { level = "金熊級"; levelClass = "text-amber-600 bg-amber-100 ring-1 ring-amber-200"; reward = 50000; }
+            else if (score >= 60) { level = "銀鵝級"; levelClass = "text-slate-600 bg-slate-200 ring-1 ring-slate-300"; reward = 20000; }
+
+            let subsidyMax = 0;
+            let sizeText = "";
+            if (households > 0) {
+                if (households < 150) { subsidyMax = 100000; sizeText = "小型社區 (10萬)"; }
+                else if (households < 300) { subsidyMax = 200000; sizeText = "中型社區 (20萬)"; }
+                else { subsidyMax = 300000; sizeText = "大型社區 (30萬)"; }
+            }
+
+            let subsidyStatus = `符合申請最高 ${subsidyMax.toLocaleString()} 元改造補助 (${sizeText})。`;
+            if (age < 4 && age > 0) { subsidyMax = 0; subsidyStatus = `屋齡僅 ${age} 年，暫無法申請改造補助。`; }
+
+            document.getElementById('totalScore').innerText = score;
+            document.getElementById('badgeLevel').innerText = level;
+            document.getElementById('badgeLevel').className = `text-lg font-bold mt-3 inline-block px-4 py-1.5 rounded-full shadow-sm ${levelClass}`;
+            document.getElementById('rewardMoney').innerText = "NT$ " + reward.toLocaleString();
+            document.getElementById('subsidyMoney').innerText = "NT$ " + subsidyMax.toLocaleString();
+
+            const suggestions = [score < 60 ? `還差 ${60 - score} 分達標銀鵝級。` : `已達標 ${level}。`, subsidyStatus];
+            document.getElementById('suggestionList').innerHTML = suggestions.map(s => `<li>${s}</li>`).join('');
+            document.getElementById('resultArea').classList.remove('hidden');
+        }
+
+        function saveData() {
+            const data = localStorage.getItem('tanji_data');
+            if(!data) return;
+            const blob = new Blob([data], {type: "application/json;charset=utf-8"});
+            saveAs(blob, `碳吉自評紀錄_${new Date().toISOString().slice(0,10)}.json`);
+        }
+
+        function loadData(input) {
+            const file = input.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    document.getElementById('households').value = data.households || '';
+                    document.getElementById('age').value = data.age || '';
+                    if(document.getElementById('plan_budget')) document.getElementById('plan_budget').value = data.plan_budget || '';
+
+                    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+                    if(data.checkboxStates) data.checkboxStates.forEach((st, idx) => { if(allCheckboxes[idx]) allCheckboxes[idx].checked = st; });
+
+                    if(data.radioStates) {
+                        for(const [name, val] of Object.entries(data.radioStates)) {
+                            const radio = document.querySelector(`input[name="${name}"][value="${val}"]`);
+                            if(radio) radio.checked = true;
+                        }
+                    }
+                    calculateScore();
+                    showToast("已成功匯入紀錄！");
+                } catch(err) { alert("讀取失敗"); }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function triggerReset() {
+            document.getElementById('resetModal').classList.remove('hidden');
+            document.getElementById('resetModal').classList.add('flex');
+        }
+
+        function confirmReset() {
+            document.getElementById('calcForm').reset();
+            localStorage.removeItem('tanji_data');
+            document.getElementById('resultArea').classList.add('hidden');
+            document.getElementById('resetModal').classList.add('hidden');
+            document.getElementById('resetModal').classList.remove('flex');
+            showToast("已清空所有資料");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        let images = [];
+        let currentImageIndex = 0;
+        let scale = 1;
+        let isDragging = false;
+        let startX, startY;
+        let translateX = 0, translateY = 0;
+
+        function toggleCompareMode() {
+            document.body.classList.toggle('compare-mode');
+            if(document.body.classList.contains('compare-mode')) {
+                setTimeout(() => {
+                    document.getElementById('assessment').scrollIntoView({behavior: 'smooth'});
+                }, 300);
+            }
+        }
+
+        function handleImageUpload(input) {
+            const files = input.files;
+            if (!files.length) return;
+
+            for (let i = 0; i < files.length; i++) {
+                const url = URL.createObjectURL(files[i]);
+                images.push(url);
+                addToSidebarGallery(url);
+            }
+
+            if (images.length === files.length) {
+                currentImageIndex = 0;
+                renderImage();
+            } 
+            input.value = '';
+        }
+
+        function addToSidebarGallery(url) {
+            const div = document.createElement('div');
+            div.className = 'bg-slate-800 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
+            div.innerHTML = `<img src="${url}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
+            div.onclick = () => selectSidebarImage(url);
+            document.getElementById('sidebarGallery').prepend(div);
+        }
+
+        function selectSidebarImage(url) {
+            const index = images.indexOf(url);
+            if (index !== -1) {
+                currentImageIndex = index;
+                renderImage();
+            }
+        }
+
+        function renderImage() {
+            const imgEl = document.getElementById('currentImage');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (images.length > 0) {
+                imgEl.src = images[currentImageIndex];
+                imgEl.classList.remove('hidden');
+                imgEl.style.display = 'block'; 
+                emptyState.classList.add('hidden');
+                resetZoom(); 
+            }
+        }
+
+        function adjustZoom(delta) {
+            scale += delta;
+            if (scale < 0.1) scale = 0.1;
+            applyTransform();
+        }
+
+        function resetZoom() {
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+            applyTransform();
+        }
+        
+        function zoomImage(event) {
+            event.preventDefault();
+            const delta = event.deltaY > 0 ? -0.1 : 0.1;
+            adjustZoom(delta);
+        }
+
+        function startDrag(e) {
+            e.preventDefault(); 
+            if (images.length === 0) return;
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            document.getElementById('imageViewer').style.cursor = 'grabbing';
+        }
+
+        function dragImage(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            applyTransform();
+        }
+
+        function endDrag() {
+            isDragging = false;
+            document.getElementById('imageViewer').style.cursor = 'grab';
+        }
+
+        function applyTransform() {
+            const img = document.getElementById('currentImage');
+            if(img) {
+                img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+                const zoomText = document.getElementById('zoomDisplay');
+                if(zoomText) {
+                    zoomText.innerText = Math.round(scale * 100) + '%';
+                }
+            }
+        }
+
+        const categories = [
+            {
+                title: "1. 生物多樣性 (6)",
+                items: ["原生種植栽(1)", "多層次植栽(1)", "生態景觀池(1)", "生態邊坡(1)", "生物多樣性環境教育解說牌(1)", "生物多樣性管理維護情形(1)"],
+                styleColor: "emerald"
+            },
+            {
+                title: "2. 綠化量 (10)",
+                items: ["訂定規約開放屋頂(1)", "設立參與式屋頂農園或花園(1)", "綠屋頂面積>70m²或超過屋頂面積20%(1)", "綠牆綠廊(2)", "綠覆率≥15%(1)、綠覆率≥30%(2)", "綠化解說牌(1)", "綠化維護現況(2)"],
+                styleColor: "emerald"
+            },
+            {
+                title: "3. 日常節能 (33)",
+                items: ["使用隔熱貼紙(1)", "設置外遮陽(1)", "公共照明≥50%(1)、≥70%(2)、≥90%(3)、", "常開指示燈≥50%(1)、≥70%(2)、≥90%(3)", "紅外線感應(1)", "空調系統合理使用(1)", "空調系統使用現況(2)", "電梯在無人乘坐會自動關閉(1)", "尖峰排風(1)", "電梯與排風管理使用現況(2)", "ESPC或類似模式(2)", "節能設施環境教育解說牌(1)", "採用數位電錶管理公共區域用電(2)", "日常節能管理維護現況(2)","節能E好宅已報名(1)、核定三星級(4)、核定四星級(6)、核定五星級(8)、核定六星級(10)"],
+                styleColor: "emerald"
+            },
+             {
+                title: "4. 水資源 (11)",
+                items: ["使用省水器材(1)", "管線漏水檢測(1)", "雨水利用規劃適當集水容量0.5~1噸(1)、集水容量>1噸(2)", "雨水利用規劃適當管線配置及標示(2)", "雨水利用辦法適當使用辦法(1)", "雜用水管線適當管線配置(2)", "雜用水規劃適當使用辦法(1)", "水資源回收解說牌(1)"],
+                styleColor: "emerald"
+            },
+             {
+                title: "5. 再生能源 (8)",
+                items: ["社區公共設施應用可再生能源，經完善評估未設置(1)、裝置容量≤2kW(2)、裝置容量>2kW(3)", "以熱泵或太陽熱水器供應公設熱水(2)", "再生能源解說牌(1)", "發電裝置維護紀錄(2)"],
+                styleColor: "amber"
+            },
+            {
+                title: "6. 垃圾源頭減量 (5)",
+                items: ["公共事物均不使用免洗餐具(1)", "推廣惜食生活(1)", "以租代買(1)", "定期統計資料庫並向住戶揭露(2)"],
+                styleColor: "sky"
+            },
+             {
+                title: "7. 資源回收 (9)",
+                items: ["設立資源回收區並保持整潔(1)", "社區資源回收分類貯存項目(3)", "社區廚餘妥善收運，交付合格廠商或清潔隊收運(1)", "資源回收宣導海報張貼(1)", "資源回收現況(3)"],
+                styleColor: "sky"
+            },
+            {
+                title: "8. 再利用 (9)",
+                items: ["二手物(書)交換或跳蚤市場(2)", "落葉堆肥(2)", "廚餘堆肥(2)", "廢食用油回收再利用活動(1)", "幸福小站或家具自行修繕再利用(1)", "資源循環再利用環境教育解說牌(1)"],
+                styleColor: "sky"
+            },
+             {
+                title: "9. 大眾運輸 (2)",
+                items: ["舉辦宣導活動及張貼海報(1)", "配合設置行人友善步行空間(1)"],
+                styleColor: "violet"
+            },
+            {
+                title: "10. 共乘 (2)",
+                items: ["設立共乘辦法與機制(1)", "張貼海報鼓勵社區或區域性共乘(1)"],
+                styleColor: "violet"
+            },
+            {
+                title: "11. 自行車 (5)",
+                items: ["自行車停車區(1)", "自行車架(1)", "自行車租借系統(1)", "綠色交通解說牌(1)", "自行車使用現況(1)"],
+                styleColor: "violet"
+            },
+            {
+                title: "12. 電動運具 (11)",
+                items: ["社區公告設有電動機車停車區，並含公共充電插座設施供使用(1)", "社區擁有或購買電動機車<5%(1)、≥5%(2)", "推廣宣導活動及張貼海報(1)", "辦理電動汽車推廣(1)", "社區住戶設有電動汽車充電設施(1)", "社區公告設有電動汽車停車區，並含公共充電設施供使用(1)", "社區住戶擁有電動汽車<1%(1)、≥1%(2)", "綠色交通環境教育解說牌(1)", "電動運具使用現況(1)"],
+                styleColor: "violet"
+            },
+             {
+                title: "13. 永續生活實踐 (10)",
+                items: ["省水宣導(1)", "用戶用水較去年低(1)", "省電宣導(1)", "用戶用電較去年低，戶數達10%以上(1)", "參與環保局或新北市政府綠色永續相關競賽活動(1)", "推廣環保局或配合當地里長參與環保局舉辦之節電省水相關活動(1)、協助推廣申請1處(1)；協助推廣申請2處(2)", "社區場域供民眾參訪與觀摩(2)", "無紙化推廣與執行(1)"],
+                styleColor: "orange"
+            },
+            {
+                title: "14. 低碳社區管理團隊 (6)",
+                items: [ "3個月開會討論節能減碳事宜(2)", "小組成員曾參與各種溫室減量等各種減碳研習課程，2人以上，總計≥12小時(1)；3人以上，總計≥36小時(4)"],
+                styleColor: "orange"
+            },
+             {
+                title: "15. 綠色消費 (6)",
+                items: ["綠色團購機制(1)", "採購綠色商品(2)", "團購金達一定額度，≥2萬(1)、≥5萬(2)、≥10萬(3)"],
+                styleColor: "orange"
+            },
+             {
+                title: "16. 推廣低碳飲食 (3)",
+                items: ["張貼宣導海報(1)", "辦理活動及記錄現況(2)"],
+                styleColor: "orange"
+            },
+             {
+                title: "17. 空氣品質 (4)",
+                items: ["辦理宣導活動及張貼海報(1)", "公共區域宣導示範提昇作法(1)", "紙錢減少燒或不要燒(1)", "金紙由清潔隊統一收取(1)"],
+                styleColor: "orange"
+            },
+            {
+                title: "18. 創新作為 (10)",
+                items: ["具在地特色低碳作為(10)"],
+                styleColor: "rose"
+            }
+        ];
+
+        function initEditor() {
+            const container = document.getElementById('editorContainer');
+            let html = '';
+            
+            categories.forEach((cat, catIndex) => {
+                const colorMap = {
+                    'emerald': 'bg-emerald-500 border-emerald-100',
+                    'amber': 'bg-amber-400 border-amber-100',
+                    'sky': 'bg-sky-500 border-sky-100',
+                    'violet': 'bg-violet-500 border-violet-100',
+                    'orange': 'bg-orange-500 border-orange-100',
+                    'rose': 'bg-rose-500 border-rose-100'
+                };
+                
+                const titleBg = colorMap[cat.styleColor] || 'bg-emerald-500 border-emerald-100';
+                
+                html += `
+                <details class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow group/details overflow-hidden mb-6" ${catIndex === 0 ? 'open' : ''}>
+                    <summary class="flex items-center justify-between p-4 cursor-pointer select-none bg-slate-50 border-b border-slate-100">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-sm font-bold text-sm ${titleBg.split(' ')[0]}">${catIndex + 1}</div>
+                            <h3 class="text-lg font-bold text-slate-700">${cat.title}</h3>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-6 space-y-6">
+                `;
+                
+                cat.items.forEach((item, itemIndex) => {
+                    html += `
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden item-card" 
+                         data-cat-title="${cat.title}" 
+                         data-item-name="${item}" 
+                         data-is-first="${itemIndex === 0}" 
+                         data-row-span="${cat.items.length}">
+                        <div class="bg-slate-50 p-3 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                            <h4 class="font-bold text-slate-700 text-base">${item}</h4>
+                            <select onchange="changeState(this)" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-1.5">
+                                <option value="exist" selected>🟢 已有成果</option>
+                                <option value="plan">🔵 擬改造</option>
+                                <option value="none">⚪ 不適合</option>
+                            </select>
+                        </div>
+                        
+                        <div class="p-4 content-area">
+                            <div class="state-exist grid grid-cols-3 gap-3 mb-3">
+                                <div class="col-span-3 grid grid-cols-3 gap-3">
+                                    ${generatePhotoBox('遠景')}
+                                    ${generatePhotoBox('一般')}
+                                    ${generatePhotoBox('特寫')}
+                                </div>
+                            </div>
+
+                            <div class="state-plan hidden mb-3">
+                                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
+                                    <h5 class="text-blue-800 text-sm font-bold mb-2">擬改造示意圖</h5>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        ${generatePhotoBox('示意圖')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="state-none hidden mb-3">
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-500 text-sm">
+                                    <span class="font-bold">提示：</span> 免附照片，請說明原因。
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1 description-label">現況描述 (必填)</label>
+                                <textarea class="w-full border-slate-300 rounded-lg p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500 shadow-sm" rows="2" placeholder="請輸入說明..."></textarea>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                
+                html += `</div></details>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function generatePhotoBox(label) {
+            return `
+            <div class="drop-zone border-2 border-dashed border-slate-300 rounded-lg p-2 text-center flex flex-col items-center justify-center min-h-[120px] relative bg-slate-50 overflow-hidden cursor-pointer"
+                    ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="drop(event)" onclick="triggerFileInput(this)">
+                <input type="file" class="hidden" accept="image/*" onchange="handleDirectUpload(this)">
+                <div class="empty-state pointer-events-none">
+                    <span class="text-xs text-slate-500 block">拖曳或點擊</span>
+                    <span class="text-[10px] text-slate-400 block mt-1">(${label})</span>
+                </div>
+                <img class="preview-img hidden w-full h-full object-cover absolute inset-0 z-10 pointer-events-none">
+                <button onclick="clearImage(event, this)" class="hidden absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 z-20 hover:bg-red-600 shadow-md transform scale-75"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>`;
+        }
+
+        function triggerFileInput(div) {
+            const input = div.querySelector('input[type="file"]');
+            input.click();
+        }
+
+        function handleDirectUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = input.parentElement;
+                    const img = container.querySelector('.preview-img');
+                    const empty = container.querySelector('.empty-state');
+                    const btn = container.querySelector('button');
+                    
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    if(empty) empty.classList.add('hidden');
+                    if(btn) btn.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            input.value = ''; // Reset
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.src);
+            ev.dataTransfer.effectAllowed = "copy";
+        }
+        function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+        function leaveDrop(ev) { ev.currentTarget.classList.remove('drag-over'); }
+        function drop(ev) {
+            ev.preventDefault();
+            const container = ev.currentTarget;
+            container.classList.remove('drag-over');
+            const src = ev.dataTransfer.getData("text");
+            if (src) {
+                const img = container.querySelector('.preview-img');
+                const empty = container.querySelector('.empty-state');
+                const btn = container.querySelector('button');
+                
+                img.src = src;
+                img.classList.remove('hidden');
+                if(empty) empty.classList.add('hidden');
+                if(btn) btn.classList.remove('hidden');
+            }
+        }
+        function clearImage(event, btn) {
+            event.stopPropagation(); // 阻止觸發 container 的 onclick
+            const container = btn.parentElement;
+            const img = container.querySelector('.preview-img');
+            const empty = container.querySelector('.empty-state');
+            img.src = ''; img.classList.add('hidden'); btn.classList.add('hidden');
+            if(empty) empty.classList.remove('hidden');
+        }
+        function changeState(select) {
+            const card = select.closest('.item-card');
+            const state = select.value;
+            const exist = card.querySelector('.state-exist');
+            const plan = card.querySelector('.state-plan');
+            const none = card.querySelector('.state-none');
+            const label = card.querySelector('.description-label');
+            
+            exist.classList.add('hidden'); plan.classList.add('hidden'); none.classList.add('hidden');
+            
+            if (state === 'exist') { exist.classList.remove('hidden'); label.innerText = '現況描述 (必填)'; label.classList.remove('text-red-600'); }
+            else if (state === 'plan') { plan.classList.remove('hidden'); label.innerText = '擬改造內容描述 (必填)'; label.classList.remove('text-red-600'); }
+            else { none.classList.remove('hidden'); label.innerText = '不適用說明 (必填)'; label.classList.add('text-red-600'); }
+        }
+        function handleSidebarUpload(input) {
+            if(input.files && input.files.length > 0) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'bg-slate-700 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
+                        div.onclick = () => selectSidebarImage(e.target.result);
+                        document.getElementById('sidebarGallery').prepend(div);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        function selectSidebarImage(url) {
+            // Find index or just push to images if not found (though reader.onload is redundant if we use blob urls, but here we use base64 for sidebar to be consistent with main upload)
+            // But wait, handleImageUpload uses createObjectURL which is blob.
+            // Let's stick to blob for sidebar to avoid huge memory usage with base64 strings if possible, 
+            // BUT for drag and drop to work seamlessly with our unified buffer function, we need to handle both.
+            
+            // If the url is base64 (from the new reader.onload above), we can just display it.
+            // If it's a blob url (from handleImageUpload), we display it too.
+            const imgEl = document.getElementById('currentImage');
+            const emptyState = document.getElementById('emptyState');
+            
+            imgEl.src = url;
+            imgEl.classList.remove('hidden');
+            imgEl.style.display = 'block'; 
+            emptyState.classList.add('hidden');
+            
+            // Also update currentImageIndex if it's in the images array
+            const idx = images.indexOf(url);
+            if(idx !== -1) currentImageIndex = idx;
+            
+            resetZoom();
+        }
+
+        async function getImageBuffer(src) {
+            if (!src) return null;
+            
+            // Case 1: Base64
+            if (src.startsWith('data:')) {
+                const base64Regex = /^data:image\/(png|jpg|jpeg|svg\+xml);base64,/;
+                if (!base64Regex.test(src)) return null;
+                const stringBase64 = src.replace(base64Regex, "");
+                let binaryString;
+                try {
+                    binaryString = window.atob(stringBase64);
+                } catch (e) {
+                    console.error("Base64 decode failed", e);
+                    return null;
+                }
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+                return bytes.buffer;
+            } 
+            // Case 2: Blob URL or HTTP URL
+            else if (src.startsWith('blob:') || src.startsWith('http')) {
+                try {
+                    const response = await fetch(src);
+                    return await response.arrayBuffer();
+                } catch (e) {
+                    console.error("Fetch failed for image source", e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        async function generateWord() {
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, VerticalAlign, TextRun, ImageRun, PageOrientation, AlignmentType, BorderStyle, TableLayoutType } = docx;
+
+            const rows = [];
+            
+            rows.push(new TableRow({
+                children: [
+                    new TableCell({ children: [new Paragraph({ text: "項目", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ 
+                        children: [
+                            new Table({
+                                width: { size: 100, type: WidthType.PERCENTAGE },
+                                borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } },
+                                rows: [
+                                    new TableRow({
+                                        children: [
+                                            new TableCell({ children: [new Paragraph({ text: "社區\n現況", bold: true, alignment: AlignmentType.CENTER })], width: { size: 10, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                                            new TableCell({ 
+                                                children: [
+                                                    new Paragraph({ text: "1.已有成果則插入3張圖片(不同位置、角度)佐證並描述現況。", size: 18 }),
+                                                    new Paragraph({ text: "2.未有成果欲於計畫中提出者，可插入擬改造的示意圖後，描述擬改造的內容。", size: 18 }),
+                                                    new Paragraph({ text: "3.社區現況不適合該項目，則免於提供佐證，但需提出說明。", size: 18 }),
+                                                ], 
+                                                width: { size: 90, type: WidthType.PERCENTAGE },
+                                                verticalAlign: VerticalAlign.CENTER
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        ], 
+                        width: { size: 45, type: WidthType.PERCENTAGE }, 
+                        rowSpan: 2, 
+                        verticalAlign: VerticalAlign.CENTER 
+                    }),
+                    new TableCell({ children: [new Paragraph({ text: "文字敘述", bold: true, alignment: AlignmentType.CENTER })], width: { size: 25, type: WidthType.PERCENTAGE }, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [new Paragraph({ text: "得分", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                ]
+            }));
+
+            rows.push(new TableRow({
+                children: [
+                    new TableCell({ children: [new Paragraph({ text: "自評", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [new Paragraph({ text: "初審", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                ]
+            }));
+
+            const cards = document.querySelectorAll('.item-card');
+            
+            for (let card of cards) {
+                const catTitle = card.dataset.catTitle;
+                const itemName = card.dataset.itemName;
+                const isFirst = card.dataset.isFirst === "true";
+                const rowSpanCount = parseInt(card.dataset.rowSpan);
+                const state = card.querySelector('select').value;
+                const descText = card.querySelector('textarea').value || (state === 'none' ? "本社區無此設施/不適用。" : "");
+                
+                let scoreText = ""; 
+                if (state === 'none') {
+                    scoreText = "0";
+                } 
+
+                const cells = [];
+
+                if (isFirst) {
+                    cells.push(new TableCell({ 
+                        children: [new Paragraph({ text: catTitle, alignment: AlignmentType.CENTER })], 
+                        verticalAlign: VerticalAlign.CENTER,
+                        rowSpan: rowSpanCount,
+                        width: { size: 5, type: WidthType.PERCENTAGE }
+                    }));
+                }
+
+                cells.push(new TableCell({ 
+                    children: [new Paragraph({ text: itemName })], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 10, type: WidthType.PERCENTAGE }
+                }));
+
+                let photoContent;
+                if (state !== 'none') {
+                    const selector = state === 'exist' ? '.state-exist img.preview-img' : '.state-plan img.preview-img';
+                    const imgs = card.querySelectorAll(selector);
+                    const photoCells = [];
+                    
+                    for(let i=0; i<3; i++) {
+                        let cellContent = [];
+                        if(imgs[i] && imgs[i].src && !imgs[i].classList.contains('hidden')) {
+                            // Now we use the robust getImageBuffer which handles both base64 and blobs
+                            const buffer = await getImageBuffer(imgs[i].src);
+                            if(buffer) {
+                                cellContent.push(new Paragraph({
+                                    children: [new ImageRun({
+                                        data: buffer,
+                                        transformation: { width: 100, height: 75 },
+                                    })],
+                                    alignment: AlignmentType.CENTER
+                                }));
+                            }
+                        } else {
+                            cellContent.push(new Paragraph(""));
+                        }
+                        
+                        photoCells.push(new TableCell({
+                            children: cellContent,
+                            verticalAlign: VerticalAlign.CENTER,
+                            width: { size: 33, type: WidthType.PERCENTAGE },
+                            borders: { 
+                                top: { style: BorderStyle.NONE }, 
+                                bottom: { style: BorderStyle.NONE }, 
+                                left: { style: BorderStyle.NONE }, 
+                                right: { style: BorderStyle.NONE },
+                                insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" }
+                            }
+                        }));
+                    }
+                    
+                    photoContent = [new Table({
+                        rows: [new TableRow({ children: photoCells })],
+                        width: { size: 100, type: WidthType.PERCENTAGE },
+                        borders: { 
+                            top: { style: BorderStyle.NONE }, 
+                            bottom: { style: BorderStyle.NONE }, 
+                            left: { style: BorderStyle.NONE }, 
+                            right: { style: BorderStyle.NONE },
+                            insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } 
+                        }
+                    })];
+                } else {
+                    photoContent = [new Paragraph({ text: "不適用", alignment: AlignmentType.CENTER, color: "888888" })];
+                }
+
+                cells.push(new TableCell({
+                    children: photoContent,
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 45, type: WidthType.PERCENTAGE }
+                }));
+
+                cells.push(new TableCell({ 
+                    children: [new Paragraph(descText)], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 25, type: WidthType.PERCENTAGE }
+                }));
+
+                cells.push(new TableCell({ 
+                    children: [new Paragraph({ text: scoreText, alignment: AlignmentType.CENTER })], 
+                    verticalAlign: VerticalAlign.CENTER,
+                    width: { size: 7.5, type: WidthType.PERCENTAGE }
+                }));
+
+                cells.push(new TableCell({ children: [], verticalAlign: VerticalAlign.CENTER, width: { size: 7.5, type: WidthType.PERCENTAGE } }));
+
+                rows.push(new TableRow({ children: cells }));
+            }
+
+            const doc = new Document({
+                sections: [{
+                    properties: { page: { size: { orientation: PageOrientation.LANDSCAPE } } },
+                    children: [
+                        new Paragraph({ text: "表四、社區現況佐證表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 200 }, bold: true, color: "000000" }),
+                        new Table({
+                            layout: TableLayoutType.FIXED,
+                            width: { size: 100, type: WidthType.PERCENTAGE },
+                            rows: rows
+                        }),
+                        new Paragraph({ 
+                            text: "改造前：      分；改造後：      分", 
+                            alignment: AlignmentType.RIGHT,
+                            spacing: { before: 300 },
+                            size: 24
+                        })
+                    ],
+                }],
+            });
+
+            Packer.toBlob(doc).then(blob => saveAs(blob, "表四、社區現況佐證表.docx"));
+        }
+
+        window.onload = function() {
+            const saved = localStorage.getItem('tanji_data');
+            if(saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('households').value = data.households || '';
+                    document.getElementById('age').value = data.age || '';
+                    if(document.getElementById('plan_budget')) document.getElementById('plan_budget').value = data.plan_budget || '';
+
+                    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+                    if(data.checkboxStates) data.checkboxStates.forEach((st, idx) => { if(allCheckboxes[idx]) allCheckboxes[idx].checked = st; });
+                    calculateScore(); 
+                } catch(e) {}
+            }
+            initEditor(); 
         }
     </script>
 </body>
