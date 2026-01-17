@@ -36,7 +36,6 @@
             background-position: center;
             background-attachment: fixed;
         }
-        
         .sr-only-input {
             position: absolute;
             width: 1px;
@@ -48,7 +47,6 @@
             white-space: nowrap;
             border-width: 0;
         }
-
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
           -webkit-appearance: none !important;
@@ -57,7 +55,6 @@
         input[type=number] {
           -moz-appearance: textfield !important;
         }
-
         .checkbox-box, .radio-box {
             background-color: white;
             border: 2px solid #cbd5e1;
@@ -65,7 +62,6 @@
         .checkbox-icon, .radio-dot {
             display: none;
         }
-
         input[type="checkbox"]:checked + .card-content .checkbox-box { 
             background-color: currentColor; 
             border-color: currentColor; 
@@ -75,7 +71,6 @@
             stroke: white !important; 
             stroke-width: 3 !important; 
         }
-
         input[type="radio"]:checked + .card-content .checkbox-box,
         input[type="radio"]:checked + .card-content .radio-box { 
             background-color: white; 
@@ -85,43 +80,36 @@
             display: block !important; 
             background-color: currentColor;
         }
-
         .group-emerald { color: #10b981; } 
         .group-emerald:hover { background-color: #ecfdf5; border-color: #6ee7b7; }
         .group-emerald:has(input:checked) { background-color: #ecfdf5; border-color: #10b981; }
         .group-emerald input:checked + .card-content .text-label { color: #064e3b; font-weight: 700; }
         .group-emerald input:checked + .card-content .score-tag { background-color: #d1fae5; color: #064e3b; }
-
         .group-amber { color: #f59e0b; }
         .group-amber:hover { background-color: #fffbeb; border-color: #fcd34d; }
         .group-amber:has(input:checked) { background-color: #fffbeb; border-color: #f59e0b; }
         .group-amber input:checked + .card-content .text-label { color: #78350f; font-weight: 700; }
         .group-amber input:checked + .card-content .score-tag { background-color: #fef3c7; color: #78350f; }
-
         .group-sky { color: #0ea5e9; }
         .group-sky:hover { background-color: #f0f9ff; border-color: #7dd3fc; }
         .group-sky:has(input:checked) { background-color: #f0f9ff; border-color: #0ea5e9; }
         .group-sky input:checked + .card-content .text-label { color: #0c4a6e; font-weight: 700; }
         .group-sky input:checked + .card-content .score-tag { background-color: #e0f2fe; color: #0c4a6e; }
-
         .group-violet { color: #8b5cf6; }
         .group-violet:hover { background-color: #f5f3ff; border-color: #a78bfa; }
         .group-violet:has(input:checked) { background-color: #f5f3ff; border-color: #8b5cf6; }
         .group-violet input:checked + .card-content .text-label { color: #4c1d95; font-weight: 700; }
         .group-violet input:checked + .card-content .score-tag { background-color: #ede9fe; color: #4c1d95; }
-
         .group-orange { color: #f97316; }
         .group-orange:hover { background-color: #fff7ed; border-color: #fdba74; }
         .group-orange:has(input:checked) { background-color: #fff7ed; border-color: #f97316; }
         .group-orange input:checked + .card-content .text-label { color: #7c2d12; font-weight: 700; }
         .group-orange input:checked + .card-content .score-tag { background-color: #ffedd5; color: #7c2d12; }
-
         .group-rose { color: #f43f5e; }
         .group-rose:hover { background-color: #fff1f2; border-color: #fda4af; }
         .group-rose:has(input:checked) { background-color: #fff1f2; border-color: #f43f5e; }
         .group-rose input:checked + .card-content .text-label { color: #881337; font-weight: 700; }
         .group-rose input:checked + .card-content .score-tag { background-color: #ffe4e6; color: #881337; }
-
         .option-card {
             @apply relative flex items-start p-3 rounded-xl border border-slate-200 cursor-pointer transition-all duration-150 bg-white select-none h-full;
         }
@@ -132,17 +120,14 @@
             @apply w-5 h-5 flex-shrink-0 mr-3 flex items-center justify-center rounded;
         }
         .radio-box { @apply rounded-full; }
-        
         .checkbox-icon { @apply w-3.5 h-3.5; }
         .radio-dot { @apply w-2.5 h-2.5 rounded-full; }
-        
         .text-label {
             @apply text-slate-600 text-base leading-snug transition-colors;
         }
         .score-tag {
             @apply ml-2 text-xs font-bold px-2 py-1 rounded bg-slate-100 text-slate-500 whitespace-nowrap;
         }
-        
         .helper-btn {
             @apply fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full shadow-xl flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform z-50 hover:shadow-2xl border-2 border-white/20;
         }
@@ -152,19 +137,16 @@
         .helper-btn:hover .helper-tooltip, .helper-btn:focus .helper-tooltip {
             @apply opacity-100 translate-y-0 pointer-events-auto;
         }
-
         .toast {
             @apply fixed top-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg z-[100] transition-all duration-300 opacity-0 -translate-y-full flex items-center;
         }
         .toast.show {
             @apply opacity-100 translate-y-0;
         }
-
         details summary::-webkit-details-marker { display: none; }
         details summary { list-style: none; }
         details .triangle-icon { @apply transition-transform duration-200 transform; }
         details[open] .triangle-icon { @apply rotate-180; }
-
         body.compare-mode #comparison-sidebar {
             transform: translateX(0);
         }
@@ -184,7 +166,6 @@
         .image-viewer-container:active {
             cursor: grabbing;
         }
-        
         @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
@@ -193,7 +174,6 @@
         .animate-pulse-ring {
             animation: pulse-ring 2s infinite;
         }
-
         .drop-zone { transition: all 0.2s; border: 2px dashed #cbd5e1; }
         .drop-zone.drag-over { border-color: #10b981; background-color: #ecfdf5; transform: scale(1.02); }
         .draggable-source { cursor: grab; }
@@ -233,7 +213,7 @@
                 <div class="flex gap-2">
                     <button onclick="adjustZoom(-0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
                     <span id="zoomDisplay" class="text-sm w-12 text-center pt-1">100%</span>
-                    <button onclick="adjustZoom(0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
+                    <button onclick="adjustZoom(0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg></button>
                 </div>
                 <div class="text-xs text-slate-400">滾輪縮放 / 拖曳移動</div>
             </div>
@@ -348,7 +328,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                        <!-- 自評項目保持原樣 -->
                         <details class="bg-white rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition-shadow group/details overflow-hidden" open>
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -463,7 +442,6 @@
                             </div>
                         </details>
                         
-                        <!-- 其他分類項目省略，實際部署時應包含所有指標 -->
                         <details class="bg-white rounded-2xl shadow-sm border border-amber-100 hover:shadow-md transition-shadow group/details overflow-hidden">
                             <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
                                 <div class="flex items-center space-x-3">
@@ -738,7 +716,6 @@
             </div>
         </div>
 
-        <!-- NEW: 合作案例區塊 (已置中、Logo放大、文字樣式調整) -->
         <section id="collaboration" class="py-20 bg-white border-t border-slate-200">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -747,15 +724,10 @@
                     <p class="mt-4 text-slate-500 max-w-2xl mx-auto text-lg">探索已導入碳吉系統的示範社區，見證綠色改造的實際成果。</p>
                 </div>
 
-                <!-- 使用 flex justify-center 將卡片置中 -->
                 <div class="flex justify-center">
-                    <!-- 案例 1：麗寶萊茵 -->
                     <a href="https://tanji2026.github.io/wonderfulplace" target="_blank" class="w-full max-w-md group block bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 hover:shadow-2xl hover:border-emerald-300 transition-all duration-300 transform hover:-translate-y-1">
-                        <!-- 圖片容器高度增加為 h-64，padding 減少為 p-4 讓 Logo 更大 -->
                         <div class="h-64 bg-white flex items-center justify-center p-4 relative overflow-hidden">
-                            <!-- 裝飾背景 -->
                             <div class="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 opacity-50"></div>
-                            <!-- LOGO：設定為 w-full h-full object-contain 確保完整且最大化 -->
                             <img src="assets/logo/logo_header.png" alt="麗寶萊茵社區" class="w-full h-full object-contain relative z-10 group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400?text=Community+Logo'">
                         </div>
                         <div class="p-6 text-center">
@@ -778,7 +750,7 @@
         </section>
 
         <footer class="bg-slate-800 text-slate-400 py-12 text-center mt-12 border-t border-slate-700">
-            <p class="text-lg font-bold text-slate-200 mb-2">碳吉 TanJi - 2026 第六屆永續生活實驗室獎參賽作品</p>
+            <p class="text-lg font-bold text-slate-200 mb-2">碳吉 TanJi - 2026 第六屆永續生活實驗室獎參賽作品｜作品受著作權法保護，未經授權請勿複製轉載。</p>
             <p class="text-sm opacity-60">本系統僅供輔助試算與文件草稿生成，實際規範請以環保局公告為準。</p>
         </footer>
     </main>
@@ -813,7 +785,6 @@
             document.getElementById('helperModal').classList.remove('hidden');
             document.getElementById('helperModal').classList.add('flex');
         }
-
         const radioState = {};
         function toggleRadio(element) {
             if (radioState[element.name] === element) {
@@ -825,29 +796,24 @@
                 calculateScore();
             }
         }
-
         function calculateScore() {
             const households = parseInt(document.getElementById('households').value) || 0;
             const age = parseInt(document.getElementById('age').value) || 0;
-            
             let score = 0;
             document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
                 score += parseInt(cb.value);
             });
-
             const radioGroups = [
                 'green_coverage', 'lighting_gen', 'lighting_exit', 'e_home', 
                 'rainwater', 'renew_energy', 'recycle_type', 'ev_scooter', 
                 'ev_car', 'training', 'green_buy', 'promote_ehome'
             ];
-            
             radioGroups.forEach(groupName => {
                 const selected = document.querySelector(`input[name="${groupName}"]:checked`);
                 if(selected) {
                     score += parseInt(selected.value);
                 }
             });
-            
             const dataToSave = {
                 households, age,
                 checkboxStates: Array.from(document.querySelectorAll('input[type="checkbox"]')).map(cb => cb.checked),
@@ -859,15 +825,12 @@
                 plan_budget: document.getElementById('plan_budget') ? document.getElementById('plan_budget').value : ''
             };
             localStorage.setItem('tanji_data', JSON.stringify(dataToSave));
-
             let level = "尚未達標";
             let levelClass = "text-slate-500 bg-slate-100";
             let reward = 0;
-
             if (score >= 100) { level = "白金級"; levelClass = "text-purple-600 bg-purple-100 ring-1 ring-purple-200"; reward = 100000; }
             else if (score >= 80) { level = "金熊級"; levelClass = "text-amber-600 bg-amber-100 ring-1 ring-amber-200"; reward = 50000; }
             else if (score >= 60) { level = "銀鵝級"; levelClass = "text-slate-600 bg-slate-200 ring-1 ring-slate-300"; reward = 20000; }
-
             let subsidyMax = 0;
             let sizeText = "";
             if (households > 0) {
@@ -875,28 +838,23 @@
                 else if (households < 300) { subsidyMax = 200000; sizeText = "中型社區 (20萬)"; }
                 else { subsidyMax = 300000; sizeText = "大型社區 (30萬)"; }
             }
-
             let subsidyStatus = `符合申請最高 ${subsidyMax.toLocaleString()} 元改造補助 (${sizeText})。`;
             if (age < 4 && age > 0) { subsidyMax = 0; subsidyStatus = `屋齡僅 ${age} 年，暫無法申請改造補助。`; }
-
             document.getElementById('totalScore').innerText = score;
             document.getElementById('badgeLevel').innerText = level;
             document.getElementById('badgeLevel').className = `text-lg font-bold mt-3 inline-block px-4 py-1.5 rounded-full shadow-sm ${levelClass}`;
             document.getElementById('rewardMoney').innerText = "NT$ " + reward.toLocaleString();
             document.getElementById('subsidyMoney').innerText = "NT$ " + subsidyMax.toLocaleString();
-
             const suggestions = [score < 60 ? `還差 ${60 - score} 分達標銀鵝級。` : `已達標 ${level}。`, subsidyStatus];
             document.getElementById('suggestionList').innerHTML = suggestions.map(s => `<li>${s}</li>`).join('');
             document.getElementById('resultArea').classList.remove('hidden');
         }
-
         function saveData() {
             const data = localStorage.getItem('tanji_data');
             if(!data) return;
             const blob = new Blob([data], {type: "application/json;charset=utf-8"});
             saveAs(blob, `碳吉自評紀錄_${new Date().toISOString().slice(0,10)}.json`);
         }
-
         function loadData(input) {
             const file = input.files[0];
             if(!file) return;
@@ -907,10 +865,8 @@
                     document.getElementById('households').value = data.households || '';
                     document.getElementById('age').value = data.age || '';
                     if(document.getElementById('plan_budget')) document.getElementById('plan_budget').value = data.plan_budget || '';
-
                     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
                     if(data.checkboxStates) data.checkboxStates.forEach((st, idx) => { if(allCheckboxes[idx]) allCheckboxes[idx].checked = st; });
-
                     if(data.radioStates) {
                         for(const [name, val] of Object.entries(data.radioStates)) {
                             const radio = document.querySelector(`input[name="${name}"][value="${val}"]`);
@@ -924,12 +880,10 @@
             reader.readAsText(file);
             input.value = '';
         }
-
         function triggerReset() {
             document.getElementById('resetModal').classList.remove('hidden');
             document.getElementById('resetModal').classList.add('flex');
         }
-
         function confirmReset() {
             document.getElementById('calcForm').reset();
             localStorage.removeItem('tanji_data');
@@ -938,21 +892,18 @@
             document.getElementById('resetModal').classList.remove('flex');
             showToast("已清空所有資料");
         }
-
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
-
         let images = [];
         let currentImageIndex = 0;
         let scale = 1;
         let isDragging = false;
         let startX, startY;
         let translateX = 0, translateY = 0;
-
         function toggleCompareMode() {
             document.body.classList.toggle('compare-mode');
             if(document.body.classList.contains('compare-mode')) {
@@ -961,24 +912,20 @@
                 }, 300);
             }
         }
-
         function handleImageUpload(input) {
             const files = input.files;
             if (!files.length) return;
-
             for (let i = 0; i < files.length; i++) {
                 const url = URL.createObjectURL(files[i]);
                 images.push(url);
                 addToSidebarGallery(url);
             }
-
             if (images.length === files.length) {
                 currentImageIndex = 0;
                 renderImage();
             } 
             input.value = '';
         }
-
         function addToSidebarGallery(url) {
             const div = document.createElement('div');
             div.className = 'bg-slate-800 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
@@ -986,19 +933,9 @@
             div.onclick = () => selectSidebarImage(url);
             document.getElementById('sidebarGallery').prepend(div);
         }
-
-        function selectSidebarImage(url) {
-            const index = images.indexOf(url);
-            if (index !== -1) {
-                currentImageIndex = index;
-                renderImage();
-            }
-        }
-
         function renderImage() {
             const imgEl = document.getElementById('currentImage');
             const emptyState = document.getElementById('emptyState');
-            
             if (images.length > 0) {
                 imgEl.src = images[currentImageIndex];
                 imgEl.classList.remove('hidden');
@@ -1007,26 +944,22 @@
                 resetZoom(); 
             }
         }
-
         function adjustZoom(delta) {
             scale += delta;
             if (scale < 0.1) scale = 0.1;
             applyTransform();
         }
-
         function resetZoom() {
             scale = 1;
             translateX = 0;
             translateY = 0;
             applyTransform();
         }
-        
         function zoomImage(event) {
             event.preventDefault();
             const delta = event.deltaY > 0 ? -0.1 : 0.1;
             adjustZoom(delta);
         }
-
         function startDrag(e) {
             e.preventDefault(); 
             if (images.length === 0) return;
@@ -1035,7 +968,6 @@
             startY = e.clientY - translateY;
             document.getElementById('imageViewer').style.cursor = 'grabbing';
         }
-
         function dragImage(e) {
             if (!isDragging) return;
             e.preventDefault();
@@ -1043,12 +975,10 @@
             translateY = e.clientY - startY;
             applyTransform();
         }
-
         function endDrag() {
             isDragging = false;
             document.getElementById('imageViewer').style.cursor = 'grab';
         }
-
         function applyTransform() {
             const img = document.getElementById('currentImage');
             if(img) {
@@ -1059,7 +989,6 @@
                 }
             }
         }
-
         const categories = [
             {
                 title: "1. 生物多樣性 (6)",
@@ -1152,11 +1081,9 @@
                 styleColor: "rose"
             }
         ];
-
         function initEditor() {
             const container = document.getElementById('editorContainer');
             let html = '';
-            
             categories.forEach((cat, catIndex) => {
                 const colorMap = {
                     'emerald': 'bg-emerald-500 border-emerald-100',
@@ -1166,9 +1093,7 @@
                     'orange': 'bg-orange-500 border-orange-100',
                     'rose': 'bg-rose-500 border-rose-100'
                 };
-                
                 const titleBg = colorMap[cat.styleColor] || 'bg-emerald-500 border-emerald-100';
-                
                 html += `
                 <details class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow group/details overflow-hidden mb-6" ${catIndex === 0 ? 'open' : ''}>
                     <summary class="flex items-center justify-between p-4 cursor-pointer select-none bg-slate-50 border-b border-slate-100">
@@ -1180,7 +1105,6 @@
                     </summary>
                     <div class="p-6 pt-6 space-y-6">
                 `;
-                
                 cat.items.forEach((item, itemIndex) => {
                     html += `
                     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden item-card" 
@@ -1196,16 +1120,14 @@
                                 <option value="none">⚪ 不適合</option>
                             </select>
                         </div>
-                        
                         <div class="p-4 content-area">
                             <div class="state-exist grid grid-cols-3 gap-3 mb-3">
                                 <div class="col-span-3 grid grid-cols-3 gap-3">
-                                    ${generatePhotoBox}
-                                    ${generatePhotoBox}
-                                    ${generatePhotoBox}
+                                    ${generatePhotoBox('佐證照片')}
+                                    ${generatePhotoBox('佐證照片')}
+                                    ${generatePhotoBox('佐證照片')}
                                 </div>
                             </div>
-
                             <div class="state-plan hidden mb-3">
                                 <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
                                     <h5 class="text-blue-800 text-sm font-bold mb-2">擬改造示意圖</h5>
@@ -1214,13 +1136,11 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="state-none hidden mb-3">
                                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-500 text-sm">
                                     <span class="font-bold">提示：</span> 免附照片，請說明原因。
                                 </div>
                             </div>
-
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-1 description-label">現況描述 (必填)</label>
                                 <textarea class="w-full border-slate-300 rounded-lg p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500 shadow-sm" rows="2" placeholder="請輸入說明..."></textarea>
@@ -1228,12 +1148,10 @@
                         </div>
                     </div>`;
                 });
-                
                 html += `</div></details>`;
             });
             container.innerHTML = html;
         }
-
         function generatePhotoBox(label) {
             return `
             <div class="drop-zone border-2 border-dashed border-slate-300 rounded-lg p-2 text-center flex flex-col items-center justify-center min-h-[120px] relative bg-slate-50 overflow-hidden cursor-pointer"
@@ -1247,12 +1165,10 @@
                 <button onclick="clearImage(event, this)" class="hidden absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 z-20 hover:bg-red-600 shadow-md transform scale-75"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>`;
         }
-
         function triggerFileInput(div) {
             const input = div.querySelector('input[type="file"]');
             input.click();
         }
-
         function handleDirectUpload(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -1261,7 +1177,6 @@
                     const img = container.querySelector('.preview-img');
                     const empty = container.querySelector('.empty-state');
                     const btn = container.querySelector('button');
-                    
                     img.src = e.target.result;
                     img.classList.remove('hidden');
                     if(empty) empty.classList.add('hidden');
@@ -1269,9 +1184,8 @@
                 }
                 reader.readAsDataURL(input.files[0]);
             }
-            input.value = ''; // Reset
+            input.value = '';
         }
-
         function drag(ev) {
             ev.dataTransfer.setData("text", ev.target.src);
             ev.dataTransfer.effectAllowed = "copy";
@@ -1287,7 +1201,6 @@
                 const img = container.querySelector('.preview-img');
                 const empty = container.querySelector('.empty-state');
                 const btn = container.querySelector('button');
-                
                 img.src = src;
                 img.classList.remove('hidden');
                 if(empty) empty.classList.add('hidden');
@@ -1295,7 +1208,7 @@
             }
         }
         function clearImage(event, btn) {
-            event.stopPropagation(); // 阻止觸發 container 的 onclick
+            event.stopPropagation();
             const container = btn.parentElement;
             const img = container.querySelector('.preview-img');
             const empty = container.querySelector('.empty-state');
@@ -1309,56 +1222,24 @@
             const plan = card.querySelector('.state-plan');
             const none = card.querySelector('.state-none');
             const label = card.querySelector('.description-label');
-            
             exist.classList.add('hidden'); plan.classList.add('hidden'); none.classList.add('hidden');
-            
             if (state === 'exist') { exist.classList.remove('hidden'); label.innerText = '現況描述 (必填)'; label.classList.remove('text-red-600'); }
             else if (state === 'plan') { plan.classList.remove('hidden'); label.innerText = '擬改造內容描述 (必填)'; label.classList.remove('text-red-600'); }
             else { none.classList.remove('hidden'); label.innerText = '不適用說明 (必填)'; label.classList.add('text-red-600'); }
         }
-        function handleSidebarUpload(input) {
-            if(input.files && input.files.length > 0) {
-                Array.from(input.files).forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const div = document.createElement('div');
-                        div.className = 'bg-slate-700 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
-                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
-                        div.onclick = () => selectSidebarImage(e.target.result);
-                        document.getElementById('sidebarGallery').prepend(div);
-                    }
-                    reader.readAsDataURL(file);
-                });
-            }
-        }
-
         function selectSidebarImage(url) {
-            // Find index or just push to images if not found (though reader.onload is redundant if we use blob urls, but here we use base64 for sidebar to be consistent with main upload)
-            // But wait, handleImageUpload uses createObjectURL which is blob.
-            // Let's stick to blob for sidebar to avoid huge memory usage with base64 strings if possible, 
-            // BUT for drag and drop to work seamlessly with our unified buffer function, we need to handle both.
-            
-            // If the url is base64 (from the new reader.onload above), we can just display it.
-            // If it's a blob url (from handleImageUpload), we display it too.
             const imgEl = document.getElementById('currentImage');
             const emptyState = document.getElementById('emptyState');
-            
             imgEl.src = url;
             imgEl.classList.remove('hidden');
             imgEl.style.display = 'block'; 
             emptyState.classList.add('hidden');
-            
-            // Also update currentImageIndex if it's in the images array
             const idx = images.indexOf(url);
             if(idx !== -1) currentImageIndex = idx;
-            
             resetZoom();
         }
-
         async function getImageBuffer(src) {
             if (!src) return null;
-            
-            // Case 1: Base64
             if (src.startsWith('data:')) {
                 const base64Regex = /^data:image\/(png|jpg|jpeg|svg\+xml);base64,/;
                 if (!base64Regex.test(src)) return null;
@@ -1367,7 +1248,6 @@
                 try {
                     binaryString = window.atob(stringBase64);
                 } catch (e) {
-                    console.error("Base64 decode failed", e);
                     return null;
                 }
                 const len = binaryString.length;
@@ -1375,24 +1255,19 @@
                 for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
                 return bytes.buffer;
             } 
-            // Case 2: Blob URL or HTTP URL
             else if (src.startsWith('blob:') || src.startsWith('http')) {
                 try {
                     const response = await fetch(src);
                     return await response.arrayBuffer();
                 } catch (e) {
-                    console.error("Fetch failed for image source", e);
                     return null;
                 }
             }
             return null;
         }
-
         async function generateWord() {
             const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, VerticalAlign, TextRun, ImageRun, PageOrientation, AlignmentType, BorderStyle, TableLayoutType } = docx;
-
             const rows = [];
-            
             rows.push(new TableRow({
                 children: [
                     new TableCell({ children: [new Paragraph({ text: "項目", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
@@ -1427,16 +1302,13 @@
                     new TableCell({ children: [new Paragraph({ text: "得分", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, verticalAlign: VerticalAlign.CENTER }),
                 ]
             }));
-
             rows.push(new TableRow({
                 children: [
                     new TableCell({ children: [new Paragraph({ text: "自評", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
                     new TableCell({ children: [new Paragraph({ text: "初審", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
                 ]
             }));
-
             const cards = document.querySelectorAll('.item-card');
-            
             for (let card of cards) {
                 const catTitle = card.dataset.catTitle;
                 const itemName = card.dataset.itemName;
@@ -1444,14 +1316,9 @@
                 const rowSpanCount = parseInt(card.dataset.rowSpan);
                 const state = card.querySelector('select').value;
                 const descText = card.querySelector('textarea').value || (state === 'none' ? "本社區無此設施/不適用。" : "");
-                
                 let scoreText = ""; 
-                if (state === 'none') {
-                    scoreText = "0";
-                } 
-
+                if (state === 'none') scoreText = "0";
                 const cells = [];
-
                 if (isFirst) {
                     cells.push(new TableCell({ 
                         children: [new Paragraph({ text: catTitle, alignment: AlignmentType.CENTER })], 
@@ -1460,23 +1327,19 @@
                         width: { size: 5, type: WidthType.PERCENTAGE }
                     }));
                 }
-
                 cells.push(new TableCell({ 
                     children: [new Paragraph({ text: itemName })], 
                     verticalAlign: VerticalAlign.CENTER,
                     width: { size: 10, type: WidthType.PERCENTAGE }
                 }));
-
                 let photoContent;
                 if (state !== 'none') {
                     const selector = state === 'exist' ? '.state-exist img.preview-img' : '.state-plan img.preview-img';
                     const imgs = card.querySelectorAll(selector);
                     const photoCells = [];
-                    
                     for(let i=0; i<3; i++) {
                         let cellContent = [];
                         if(imgs[i] && imgs[i].src && !imgs[i].classList.contains('hidden')) {
-                            // Now we use the robust getImageBuffer which handles both base64 and blobs
                             const buffer = await getImageBuffer(imgs[i].src);
                             if(buffer) {
                                 cellContent.push(new Paragraph({
@@ -1490,7 +1353,6 @@
                         } else {
                             cellContent.push(new Paragraph(""));
                         }
-                        
                         photoCells.push(new TableCell({
                             children: cellContent,
                             verticalAlign: VerticalAlign.CENTER,
@@ -1504,7 +1366,6 @@
                             }
                         }));
                     }
-                    
                     photoContent = [new Table({
                         rows: [new TableRow({ children: photoCells })],
                         width: { size: 100, type: WidthType.PERCENTAGE },
@@ -1519,30 +1380,24 @@
                 } else {
                     photoContent = [new Paragraph({ text: "不適用", alignment: AlignmentType.CENTER, color: "888888" })];
                 }
-
                 cells.push(new TableCell({
                     children: photoContent,
                     verticalAlign: VerticalAlign.CENTER,
                     width: { size: 45, type: WidthType.PERCENTAGE }
                 }));
-
                 cells.push(new TableCell({ 
                     children: [new Paragraph(descText)], 
                     verticalAlign: VerticalAlign.CENTER,
                     width: { size: 25, type: WidthType.PERCENTAGE }
                 }));
-
                 cells.push(new TableCell({ 
                     children: [new Paragraph({ text: scoreText, alignment: AlignmentType.CENTER })], 
                     verticalAlign: VerticalAlign.CENTER,
                     width: { size: 7.5, type: WidthType.PERCENTAGE }
                 }));
-
                 cells.push(new TableCell({ children: [], verticalAlign: VerticalAlign.CENTER, width: { size: 7.5, type: WidthType.PERCENTAGE } }));
-
                 rows.push(new TableRow({ children: cells }));
             }
-
             const doc = new Document({
                 sections: [{
                     properties: { page: { size: { orientation: PageOrientation.LANDSCAPE } } },
@@ -1554,7 +1409,7 @@
                             rows: rows
                         }),
                         new Paragraph({ 
-                            text: "改造前：      分；改造後：      分", 
+                            text: "改造前：       分；改造後：       分", 
                             alignment: AlignmentType.RIGHT,
                             spacing: { before: 300 },
                             size: 24
@@ -1562,10 +1417,8 @@
                     ],
                 }],
             });
-
             Packer.toBlob(doc).then(blob => saveAs(blob, "表四、社區現況佐證表.docx"));
         }
-
         window.onload = function() {
             const saved = localStorage.getItem('tanji_data');
             if(saved) {
@@ -1574,7 +1427,6 @@
                     document.getElementById('households').value = data.households || '';
                     document.getElementById('age').value = data.age || '';
                     if(document.getElementById('plan_budget')) document.getElementById('plan_budget').value = data.plan_budget || '';
-
                     const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
                     if(data.checkboxStates) data.checkboxStates.forEach((st, idx) => { if(allCheckboxes[idx]) allCheckboxes[idx].checked = st; });
                     calculateScore(); 
