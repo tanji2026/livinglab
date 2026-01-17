@@ -259,7 +259,7 @@
                 <p class="text-slate-500 text-sm mb-6">這將會移除目前所有已填寫的資料與暫存紀錄，無法復原。</p>
                 <div class="flex gap-3">
                     <button onclick="document.getElementById('resetModal').classList.add('hidden')" class="flex-1 px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">取消</button>
-                    <button onclick="confirmReset()" class="flex-1 px-4 py-2 bg-rose-50 text-white rounded-xl font-bold hover:bg-rose-600 transition">確定清空</button>
+                    <button onclick="confirmReset()" class="flex-1 px-4 py-2 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition">確定清空</button>
                 </div>
             </div>
         </div>
@@ -1073,7 +1073,7 @@
             },
             {
                 title: "3. 日常節能 (33)",
-                items: ["使用隔熱貼紙(1)", "設置外遮陽(1)", "公共照明≥50%(1)、≥70%(2)、≥90%(3)", "常開指示燈≥50%(1)、≥70%(2)、≥90%(3)", "紅外線感應(1)", "空調系統合理使用(1)", "空調系統使用現況(2)", "電梯在無人乘坐會自動關閉(1)", "尖峰排風(1)", "電梯與排風管理使用現況(2)", "ESPC或類似模式(2)", "節能設施環境教育解說牌(1)", "採用數位電錶管理公共區域用電(2)", "日常節能管理維護現況(2)","節能E好宅已報名(1)、核定三星級(4)、核定四星級(6)、核定五星級(8)、核定六星級(10)"],
+                items: ["使用隔熱貼紙(1)", "設置外遮陽(1)", "公共照明≥50%(1)、≥70%(2)、≥90%(3)、", "常開指示燈≥50%(1)、≥70%(2)、≥90%(3)", "紅外線感應(1)", "空調系統合理使用(1)", "空調系統使用現況(2)", "電梯在無人乘坐會自動關閉(1)", "尖峰排風(1)", "電梯與排風管理使用現況(2)", "ESPC或類似模式(2)", "節能設施環境教育解說牌(1)", "採用數位電錶管理公共區域用電(2)", "日常節能管理維護現況(2)","節能E好宅已報名(1)、核定三星級(4)、核定四星級(6)、核定五星級(8)、核定六星級(10)"],
                 styleColor: "emerald"
             },
              {
@@ -1200,9 +1200,9 @@
                         <div class="p-4 content-area">
                             <div class="state-exist grid grid-cols-3 gap-3 mb-3">
                                 <div class="col-span-3 grid grid-cols-3 gap-3">
-                                    ${generatePhotoBox}
-                                    ${generatePhotoBox}
-                                    ${generatePhotoBox}
+                                    ${generatePhotoBox('遠景')}
+                                    ${generatePhotoBox('一般')}
+                                    ${generatePhotoBox('特寫')}
                                 </div>
                             </div>
 
