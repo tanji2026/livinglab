@@ -255,7 +255,6 @@
                     <span class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-teal-600 tracking-wide drop-shadow-sm">碳吉 TanJi</span>
                 </div>
                 
-                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
                     <button onclick="toggleCompareMode()" class="flex items-center px-5 py-2.5 bg-emerald-700 text-white rounded-xl hover:bg-emerald-800 transition-all duration-200 font-bold shadow-lg border-2 border-emerald-600">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
@@ -266,7 +265,6 @@
                     <a href="#collaboration" class="text-slate-500 hover:text-emerald-600 font-medium transition text-base">合作案例</a>
                 </div>
 
-                <!-- Mobile Hamburger Button -->
                 <div class="md:hidden flex items-center">
                     <button onclick="toggleMobileMenu()" class="text-slate-600 hover:text-emerald-600 focus:outline-none p-2" id="mobile-menu-button">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="hamburger-icon">
@@ -280,7 +278,6 @@
             </div>
         </div>
 
-        <!-- Mobile Menu Dropdown -->
         <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-slate-100 flex flex-col p-4 space-y-3 shadow-xl absolute w-full left-0 z-50">
             <button onclick="toggleCompareMode(); toggleMobileMenu();" class="flex items-center justify-center w-full px-5 py-3 bg-emerald-700 text-white rounded-xl font-bold shadow-lg">
                 照片工作台
@@ -1186,7 +1183,7 @@
         function generatePhotoBox(label) {
             return `
             <div class="drop-zone border-2 border-dashed border-slate-300 rounded-lg p-2 text-center flex flex-col items-center justify-center min-h-[120px] relative bg-slate-50 overflow-hidden cursor-pointer"
-                    ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="drop(event)" onclick="triggerFileInput(this)">
+                 ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="drop(event)" onclick="triggerFileInput(this)">
                 <input type="file" class="hidden" accept="image/*" onchange="handleDirectUpload(this)">
                 <div class="empty-state pointer-events-none">
                     <span class="text-xs text-slate-500 block">拖曳或點擊</span>
@@ -1208,6 +1205,10 @@
                     const img = container.querySelector('.preview-img');
                     const empty = container.querySelector('.empty-state');
                     const btn = container.querySelector('button');
+                    img.onload = function() {
+                        img.dataset.origWidth = img.naturalWidth;
+                        img.dataset.origHeight = img.naturalHeight;
+                    };
                     img.src = e.target.result;
                     img.classList.remove('hidden');
                     if(empty) empty.classList.add('hidden');
@@ -1232,6 +1233,10 @@
                 const img = container.querySelector('.preview-img');
                 const empty = container.querySelector('.empty-state');
                 const btn = container.querySelector('button');
+                img.onload = function() {
+                    img.dataset.origWidth = img.naturalWidth;
+                    img.dataset.origHeight = img.naturalHeight;
+                };
                 img.src = src;
                 img.classList.remove('hidden');
                 if(empty) empty.classList.add('hidden');
@@ -1290,50 +1295,91 @@
             }
             return null;
         }
+        function splitForVertical(str) {
+            const parts = [];
+            let remaining = str;
+            const matchStart = remaining.match(/^(\d+\.?\s*)/);
+            if (matchStart) {
+                parts.push(matchStart[1].trim());
+                remaining = remaining.substring(matchStart[0].length);
+            }
+            const matchEnd = remaining.match(/(\(\d+\))$/);
+            let endPart = null;
+            if (matchEnd) {
+                endPart = matchEnd[1];
+                remaining = remaining.substring(0, remaining.length - matchEnd[0].length);
+            }
+            for (let char of remaining) {
+                if (char.trim() !== "") {
+                    parts.push(char);
+                }
+            }
+            if (endPart) {
+                parts.push(endPart);
+            }
+            return parts;
+        }
         async function generateWord() {
             const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, VerticalAlign, TextRun, ImageRun, PageOrientation, AlignmentType, BorderStyle, TableLayoutType } = docx;
             const rows = [];
+            const createTightP = (text, options = {}) => {
+                return new Paragraph({
+                    text: text,
+                    alignment: options.align || AlignmentType.CENTER,
+                    bold: options.bold || false,
+                    color: options.color || "000000",
+                    size: options.size || 24,
+                    spacing: { before: 0, after: 0, line: 240 },
+                    indent: { left: 0, right: 0 },
+                    ...options
+                });
+            };
+            const tightCellMargins = { top: 0, bottom: 0, left: 0, right: 0 };
             rows.push(new TableRow({
                 children: [
-                    new TableCell({ children: [new Paragraph({ text: "項目", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [createTightP("項目", { bold: true })], width: { size: 4, type: WidthType.PERCENTAGE }, columnSpan: 2, rowSpan: 2, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
                     new TableCell({ 
                         children: [
                             new Table({
                                 width: { size: 100, type: WidthType.PERCENTAGE },
+                                margins: tightCellMargins,
                                 borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } },
                                 rows: [
                                     new TableRow({
                                         children: [
-                                            new TableCell({ children: [new Paragraph({ text: "社區\n現況", bold: true, alignment: AlignmentType.CENTER })], width: { size: 10, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                                            new TableCell({ children: [createTightP("社區\n現況", { bold: true })], width: { size: 10, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
                                             new TableCell({ 
                                                 children: [
-                                                    new Paragraph({ text: "1.已有成果則插入3張圖片(不同位置、角度)佐證並描述現況。", size: 18 }),
-                                                    new Paragraph({ text: "2.未有成果欲於計畫中提出者，可插入擬改造的示意圖後，描述擬改造的內容。", size: 18 }),
-                                                    new Paragraph({ text: "3.社區現況不適合該項目，則免於提供佐證，但需提出說明。", size: 18 }),
+                                                    createTightP("1.已有成果則插入3張圖片(不同位置、角度)佐證並描述現況。", { align: AlignmentType.LEFT, size: 18 }),
+                                                    createTightP("2.未有成果欲於計畫中提出者，可插入擬改造的示意圖後，描述擬改造的內容。", { align: AlignmentType.LEFT, size: 18 }),
+                                                    createTightP("3.社區現況不適合該項目，則免於提供佐證，但需提出說明。", { align: AlignmentType.LEFT, size: 18 }),
                                                 ], 
                                                 width: { size: 90, type: WidthType.PERCENTAGE },
-                                                verticalAlign: VerticalAlign.CENTER
+                                                verticalAlign: VerticalAlign.CENTER,
+                                                margins: tightCellMargins
                                             })
                                         ]
                                     })
                                 ]
                             })
                         ], 
-                        width: { size: 45, type: WidthType.PERCENTAGE }, 
+                        width: { size: 82, type: WidthType.PERCENTAGE }, 
                         rowSpan: 2, 
-                        verticalAlign: VerticalAlign.CENTER 
+                        verticalAlign: VerticalAlign.CENTER,
+                        margins: tightCellMargins
                     }),
-                    new TableCell({ children: [new Paragraph({ text: "文字敘述", bold: true, alignment: AlignmentType.CENTER })], width: { size: 25, type: WidthType.PERCENTAGE }, rowSpan: 2, verticalAlign: VerticalAlign.CENTER }),
-                    new TableCell({ children: [new Paragraph({ text: "得分", bold: true, alignment: AlignmentType.CENTER })], width: { size: 15, type: WidthType.PERCENTAGE }, columnSpan: 2, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [createTightP("文字敘述", { bold: true })], width: { size: 10, type: WidthType.PERCENTAGE }, rowSpan: 2, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
+                    new TableCell({ children: [createTightP("得分", { bold: true })], width: { size: 4, type: WidthType.PERCENTAGE }, columnSpan: 2, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
                 ]
             }));
             rows.push(new TableRow({
                 children: [
-                    new TableCell({ children: [new Paragraph({ text: "自評", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
-                    new TableCell({ children: [new Paragraph({ text: "初審", alignment: AlignmentType.CENTER })], width: { size: 7.5, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER }),
+                    new TableCell({ children: [createTightP("自"), createTightP("評")], width: { size: 2, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
+                    new TableCell({ children: [createTightP("初"), createTightP("審")], width: { size: 2, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
                 ]
             }));
             const cards = document.querySelectorAll('.item-card');
+            const MAX_PX = 290;
             for (let card of cards) {
                 const catTitle = card.dataset.catTitle;
                 const itemName = card.dataset.itemName;
@@ -1345,17 +1391,21 @@
                 if (state === 'none') scoreText = "0";
                 const cells = [];
                 if (isFirst) {
+                    const catParagraphs = splitForVertical(catTitle).map(text => createTightP(text));
                     cells.push(new TableCell({ 
-                        children: [new Paragraph({ text: catTitle, alignment: AlignmentType.CENTER })], 
+                        children: catParagraphs, 
                         verticalAlign: VerticalAlign.CENTER,
                         rowSpan: rowSpanCount,
-                        width: { size: 5, type: WidthType.PERCENTAGE }
+                        width: { size: 2, type: WidthType.PERCENTAGE },
+                        margins: tightCellMargins
                     }));
                 }
+                const itemParagraphs = splitForVertical(itemName).map(text => createTightP(text));
                 cells.push(new TableCell({ 
-                    children: [new Paragraph({ text: itemName })], 
+                    children: itemParagraphs, 
                     verticalAlign: VerticalAlign.CENTER,
-                    width: { size: 10, type: WidthType.PERCENTAGE }
+                    width: { size: 2, type: WidthType.PERCENTAGE },
+                    margins: tightCellMargins
                 }));
                 let photoContent;
                 if (state !== 'none') {
@@ -1367,78 +1417,74 @@
                         if(imgs[i] && imgs[i].src && !imgs[i].classList.contains('hidden')) {
                             const buffer = await getImageBuffer(imgs[i].src);
                             if(buffer) {
+                                const origW = parseInt(imgs[i].dataset.origWidth) || 4;
+                                const origH = parseInt(imgs[i].dataset.origHeight) || 3;
+                                let targetW = MAX_PX;
+                                let targetH = Math.floor(targetW * (origH / origW));
+                                if (targetH > MAX_PX) {
+                                    targetH = MAX_PX;
+                                    targetW = Math.floor(targetH * (origW / origH));
+                                }
                                 cellContent.push(new Paragraph({
                                     children: [new ImageRun({
                                         data: buffer,
-                                        transformation: { width: 100, height: 75 },
+                                        transformation: { width: targetW, height: targetH },
                                     })],
-                                    alignment: AlignmentType.CENTER
+                                    alignment: AlignmentType.CENTER,
+                                    spacing: { before: 0, after: 0 },
+                                    indent: { left: 0, right: 0 }
                                 }));
                             }
                         } else {
-                            cellContent.push(new Paragraph(""));
+                            cellContent.push(createTightP(""));
                         }
                         photoCells.push(new TableCell({
                             children: cellContent,
                             verticalAlign: VerticalAlign.CENTER,
                             width: { size: 33, type: WidthType.PERCENTAGE },
-                            borders: { 
-                                top: { style: BorderStyle.NONE }, 
-                                bottom: { style: BorderStyle.NONE }, 
-                                left: { style: BorderStyle.NONE }, 
-                                right: { style: BorderStyle.NONE },
-                                insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" }
-                            }
+                            margins: tightCellMargins,
+                            borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } }
                         }));
                     }
                     photoContent = [new Table({
                         rows: [new TableRow({ children: photoCells })],
                         width: { size: 100, type: WidthType.PERCENTAGE },
-                        borders: { 
-                            top: { style: BorderStyle.NONE }, 
-                            bottom: { style: BorderStyle.NONE }, 
-                            left: { style: BorderStyle.NONE }, 
-                            right: { style: BorderStyle.NONE },
-                            insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } 
-                        }
+                        margins: tightCellMargins,
+                        borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" } }
                     })];
                 } else {
-                    photoContent = [new Paragraph({ text: "不適用", alignment: AlignmentType.CENTER, color: "888888" })];
+                    photoContent = [createTightP("不適用", { color: "888888" })];
                 }
                 cells.push(new TableCell({
                     children: photoContent,
                     verticalAlign: VerticalAlign.CENTER,
-                    width: { size: 45, type: WidthType.PERCENTAGE }
+                    width: { size: 82, type: WidthType.PERCENTAGE },
+                    margins: tightCellMargins
                 }));
+                const descParagraphs = descText.split('\n').map(line => createTightP(line, { align: AlignmentType.LEFT }));
+                if (descParagraphs.length === 0) descParagraphs.push(createTightP("", { align: AlignmentType.LEFT }));
                 cells.push(new TableCell({ 
-                    children: [new Paragraph(descText)], 
+                    children: descParagraphs, 
                     verticalAlign: VerticalAlign.CENTER,
-                    width: { size: 25, type: WidthType.PERCENTAGE }
+                    width: { size: 10, type: WidthType.PERCENTAGE },
+                    margins: tightCellMargins
                 }));
-                cells.push(new TableCell({ 
-                    children: [new Paragraph({ text: scoreText, alignment: AlignmentType.CENTER })], 
-                    verticalAlign: VerticalAlign.CENTER,
-                    width: { size: 7.5, type: WidthType.PERCENTAGE }
-                }));
-                cells.push(new TableCell({ children: [], verticalAlign: VerticalAlign.CENTER, width: { size: 7.5, type: WidthType.PERCENTAGE } }));
+                cells.push(new TableCell({ children: [createTightP(scoreText)], verticalAlign: VerticalAlign.CENTER, width: { size: 2, type: WidthType.PERCENTAGE }, margins: tightCellMargins }));
+                cells.push(new TableCell({ children: [], verticalAlign: VerticalAlign.CENTER, width: { size: 2, type: WidthType.PERCENTAGE }, margins: tightCellMargins }));
                 rows.push(new TableRow({ children: cells }));
             }
             const doc = new Document({
                 sections: [{
-                    properties: { page: { size: { orientation: PageOrientation.LANDSCAPE } } },
+                    properties: { page: { margin: { top: 200, right: 200, bottom: 200, left: 200 }, size: { orientation: PageOrientation.LANDSCAPE } } },
                     children: [
-                        new Paragraph({ text: "表四、社區現況佐證表", heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER, spacing: { after: 200 }, bold: true, color: "000000" }),
+                        createTightP("表四、社區現況佐證表", { heading: docx.HeadingLevel.HEADING_1, spacing: { after: 200 }, bold: true }),
                         new Table({
                             layout: TableLayoutType.FIXED,
                             width: { size: 100, type: WidthType.PERCENTAGE },
+                            margins: tightCellMargins,
                             rows: rows
                         }),
-                        new Paragraph({ 
-                            text: "改造前：       分；改造後：       分", 
-                            alignment: AlignmentType.RIGHT,
-                            spacing: { before: 300 },
-                            size: 24
-                        })
+                        createTightP("改造前：        分；改造後：        分", { align: AlignmentType.RIGHT, spacing: { before: 300 } })
                     ],
                 }],
             });
